@@ -1295,6 +1295,169 @@ TRANSLATIONS = {
     "View and manage your subscription orders": {"zh_CN": "查看和管理您的订阅订单", "zh_TW": "檢視和管理您的訂閱訂單", "ru_RU": "Просмотр и управление заказами подписки", "fa_IR": "مشاهده و مدیریت سفارش‌های اشتراک"},
     "Welcome to JinGoVPN": {"zh_CN": "欢迎使用 JinGoVPN", "zh_TW": "歡迎使用 JinGoVPN", "ru_RU": "Добро пожаловать в JinGoVPN", "fa_IR": "به JinGoVPN خوش آمدید"},
     "xray-core API service port": {"zh_CN": "xray-core API 服务端口", "zh_TW": "xray-core API 服務埠", "ru_RU": "Порт API-сервиса xray-core", "fa_IR": "پورت سرویس API xray-core"},
+
+    # Additional translations
+    "About JinGo": {"zh_CN": "关于 JinGo", "zh_TW": "關於 JinGo", "ru_RU": "О JinGo", "fa_IR": "درباره JinGo", "vi_VN": "Về JinGo", "km_KH": "អំពី JinGo", "my_MM": "JinGo အကြောင်း"},
+    "JinGo Client": {"zh_CN": "JinGo 客户端", "zh_TW": "JinGo 用戶端", "ru_RU": "Клиент JinGo", "fa_IR": "کلاینت JinGo", "vi_VN": "JinGo Client", "km_KH": "JinGo Client", "my_MM": "JinGo Client"},
+    "Tap to retry": {"zh_CN": "点击重试", "zh_TW": "點擊重試", "ru_RU": "Нажмите для повтора", "fa_IR": "برای تلاش مجدد ضربه بزنید", "vi_VN": "Nhấn để thử lại", "km_KH": "ចុចដើម្បីព្យាយាមម្ដងទៀត", "my_MM": "ထပ်စမ်းရန်နှိပ်"},
+    "Free": {"zh_CN": "免费", "zh_TW": "免費", "ru_RU": "Бесплатно", "fa_IR": "رایگان", "vi_VN": "Miễn phí", "km_KH": "ឥតគិតថ្លៃ", "my_MM": "အခမဲ့"},
+    "Standard": {"zh_CN": "标准", "zh_TW": "標準", "ru_RU": "Стандарт", "fa_IR": "استاندارد", "vi_VN": "Tiêu chuẩn", "km_KH": "ស្តង់ដារ", "my_MM": "စံသတ်မှတ်"},
+    "Premium": {"zh_CN": "高级", "zh_TW": "高級", "ru_RU": "Премиум", "fa_IR": "ویژه", "vi_VN": "Cao cấp", "km_KH": "ពិសេស", "my_MM": "ပရီမီယံ"},
+    "Pro": {"zh_CN": "专业", "zh_TW": "專業", "ru_RU": "Про", "fa_IR": "حرفه‌ای", "vi_VN": "Chuyên nghiệp", "km_KH": "វិជ្ជាជីវៈ", "my_MM": "ပရို"},
+    "Elite": {"zh_CN": "精英", "zh_TW": "精英", "ru_RU": "Элита", "fa_IR": "نخبه", "vi_VN": "Tinh hoa", "km_KH": "អ្នកជំនាញ", "my_MM": "အထူး"},
+    "Enterprise": {"zh_CN": "企业", "zh_TW": "企業", "ru_RU": "Корпоративный", "fa_IR": "سازمانی", "vi_VN": "Doanh nghiệp", "km_KH": "សហគ្រាស", "my_MM": "လုပ်ငန်း"},
+    "Welcome to JinGo": {"zh_CN": "欢迎使用 JinGo", "zh_TW": "歡迎使用 JinGo", "ru_RU": "Добро пожаловать в JinGo", "fa_IR": "به JinGo خوش آمدید", "vi_VN": "Chào mừng đến JinGo", "km_KH": "សូមស្វាគមន៍មក JinGo", "my_MM": "JinGo မှကြိုဆိုပါသည်"},
+    "Groups": {"zh_CN": "分组", "zh_TW": "群組", "ru_RU": "Группы", "fa_IR": "گروه‌ها", "vi_VN": "Nhóm", "km_KH": "ក្រុម", "my_MM": "အုပ်စုများ"},
+    "Traffic": {"zh_CN": "流量", "zh_TW": "流量", "ru_RU": "Трафик", "fa_IR": "ترافیک", "vi_VN": "Lưu lượng", "km_KH": "ចរាចរណ៍", "my_MM": "အသွားအလာ"},
+    "Days": {"zh_CN": "天", "zh_TW": "天", "ru_RU": "Дней", "fa_IR": "روز", "vi_VN": "Ngày", "km_KH": "ថ្ងៃ", "my_MM": "ရက်"},
+    "Status": {"zh_CN": "状态", "zh_TW": "狀態", "ru_RU": "Статус", "fa_IR": "وضعیت", "vi_VN": "Trạng thái", "km_KH": "ស្ថានភាព", "my_MM": "အခြေအနေ"},
+    "Test Speed": {"zh_CN": "测速", "zh_TW": "測速", "ru_RU": "Тест скорости", "fa_IR": "تست سرعت", "vi_VN": "Test tốc độ", "km_KH": "សាកល្បងល្បឿន", "my_MM": "အမြန်နှုန်းစမ်း"},
+    "Server not found": {"zh_CN": "未找到服务器", "zh_TW": "未找到伺服器", "ru_RU": "Сервер не найден", "fa_IR": "سرور یافت نشد", "vi_VN": "Không tìm thấy máy chủ", "km_KH": "រកមិនឃើញម៉ាស៊ីនមេ", "my_MM": "ဆာဗာမတွေ့"},
+
+    # App selector
+    "Select Apps": {"zh_CN": "选择应用", "zh_TW": "選擇應用程式", "ru_RU": "Выбрать приложения", "fa_IR": "انتخاب برنامه‌ها", "vi_VN": "Chọn ứng dụng", "km_KH": "ជ្រើសរើសកម្មវិធី", "my_MM": "အက်ပ်ရွေး"},
+    "%1 selected": {"zh_CN": "已选择 %1 个", "zh_TW": "已選擇 %1 個", "ru_RU": "%1 выбрано", "fa_IR": "%1 انتخاب شده", "vi_VN": "Đã chọn %1", "km_KH": "បានជ្រើស %1", "my_MM": "%1 ရွေးပြီး"},
+    "Search apps...": {"zh_CN": "搜索应用...", "zh_TW": "搜尋應用程式...", "ru_RU": "Поиск приложений...", "fa_IR": "جستجوی برنامه‌ها...", "vi_VN": "Tìm ứng dụng...", "km_KH": "ស្វែងរកកម្មវិធី...", "my_MM": "အက်ပ်ရှာ..."},
+    "Select All": {"zh_CN": "全选", "zh_TW": "全選", "ru_RU": "Выбрать все", "fa_IR": "انتخاب همه", "vi_VN": "Chọn tất cả", "km_KH": "ជ្រើសទាំងអស់", "my_MM": "အားလုံးရွေး"},
+    "Deselect All": {"zh_CN": "取消全选", "zh_TW": "取消全選", "ru_RU": "Снять выделение", "fa_IR": "لغو انتخاب همه", "vi_VN": "Bỏ chọn tất cả", "km_KH": "មិនជ្រើសទាំងអស់", "my_MM": "အားလုံးဖြုတ်"},
+    "No apps found": {"zh_CN": "未找到应用", "zh_TW": "未找到應用程式", "ru_RU": "Приложения не найдены", "fa_IR": "برنامه‌ای یافت نشد", "vi_VN": "Không tìm thấy ứng dụng", "km_KH": "រកមិនឃើញកម្មវិធី", "my_MM": "အက်ပ်မတွေ့"},
+    "Save Selection": {"zh_CN": "保存选择", "zh_TW": "儲存選擇", "ru_RU": "Сохранить выбор", "fa_IR": "ذخیره انتخاب", "vi_VN": "Lưu lựa chọn", "km_KH": "រក្សាទុកការជ្រើសរើស", "my_MM": "ရွေးချယ်မှုသိမ်း"},
+
+    # Password
+    "Enter new password (min 8 chars)": {"zh_CN": "输入新密码（至少8位）", "zh_TW": "輸入新密碼（至少8位）", "ru_RU": "Введите новый пароль (мин. 8 символов)", "fa_IR": "رمز عبور جدید وارد کنید (حداقل 8 کاراکتر)", "vi_VN": "Nhập mật khẩu mới (tối thiểu 8 ký tự)", "km_KH": "បញ្ចូលពាក្យសម្ងាត់ថ្មី (យ៉ាងហោច 8 តួអក្សរ)", "my_MM": "စကားဝှက်အသစ်ထည့်ပါ (အနည်းဆုံး 8 လုံး)"},
+    "• Password must be at least 8 characters": {"zh_CN": "• 密码至少需要8个字符", "zh_TW": "• 密碼至少需要8個字元", "ru_RU": "• Пароль должен содержать минимум 8 символов", "fa_IR": "• رمز عبور باید حداقل 8 کاراکتر باشد", "vi_VN": "• Mật khẩu phải có ít nhất 8 ký tự", "km_KH": "• ពាក្យសម្ងាត់ត្រូវមានយ៉ាងហោច 8 តួអក្សរ", "my_MM": "• စကားဝှက်သည် အနည်းဆုံး 8 လုံးရှိရမည်"},
+    "New password must be at least 8 characters": {"zh_CN": "新密码至少需要8个字符", "zh_TW": "新密碼至少需要8個字元", "ru_RU": "Новый пароль должен содержать минимум 8 символов", "fa_IR": "رمز عبور جدید باید حداقل 8 کاراکتر باشد", "vi_VN": "Mật khẩu mới phải có ít nhất 8 ký tự", "km_KH": "ពាក្យសម្ងាត់ថ្មីត្រូវមានយ៉ាងហោច 8 តួអក្សរ", "my_MM": "စကားဝှက်အသစ်သည် အနည်းဆုံး 8 လုံးရှိရမည်"},
+
+    # Connection
+    "No Server Selected": {"zh_CN": "未选择服务器", "zh_TW": "未選擇伺服器", "ru_RU": "Сервер не выбран", "fa_IR": "سروری انتخاب نشده", "vi_VN": "Chưa chọn máy chủ", "km_KH": "មិនបានជ្រើសម៉ាស៊ីនមេ", "my_MM": "ဆာဗာမရွေးရသေး"},
+    "Connection Duration": {"zh_CN": "连接时长", "zh_TW": "連接時長", "ru_RU": "Длительность соединения", "fa_IR": "مدت اتصال", "vi_VN": "Thời gian kết nối", "km_KH": "រយៈពេលភ្ជាប់", "my_MM": "ချိတ်ဆက်ချိန်"},
+    "Connect Settings": {"zh_CN": "连接设置", "zh_TW": "連接設定", "ru_RU": "Настройки соединения", "fa_IR": "تنظیمات اتصال", "vi_VN": "Cài đặt kết nối", "km_KH": "ការកំណត់ការភ្ជាប់", "my_MM": "ချိတ်ဆက်ဆက်တင်"},
+    "* Changes to connection settings require reconnecting to take effect": {"zh_CN": "* 连接设置的更改需要重新连接才能生效", "zh_TW": "* 連接設定的變更需要重新連接才能生效", "ru_RU": "* Изменения настроек соединения требуют переподключения", "fa_IR": "* تغییرات تنظیمات اتصال نیاز به اتصال مجدد دارد", "vi_VN": "* Thay đổi cài đặt kết nối cần kết nối lại", "km_KH": "* ការផ្លាស់ប្ដូរការកំណត់ការភ្ជាប់ត្រូវការភ្ជាប់ម្ដងទៀត", "my_MM": "* ချိတ်ဆက်ဆက်တင်ပြောင်းလဲမှုများ အသက်ဝင်ရန် ပြန်ချိတ်ဆက်ရမည်"},
+    "Internal error: authManager not available": {"zh_CN": "内部错误：认证管理器不可用", "zh_TW": "內部錯誤：認證管理器不可用", "ru_RU": "Внутренняя ошибка: authManager недоступен", "fa_IR": "خطای داخلی: authManager در دسترس نیست", "vi_VN": "Lỗi nội bộ: authManager không khả dụng", "km_KH": "កំហុសខាងក្នុង: authManager មិនមាន", "my_MM": "အတွင်းပိုင်းအမှား: authManager မရနိုင်"},
+
+    # Countries
+    "Antarctica": {"zh_CN": "南极洲", "zh_TW": "南極洲", "ru_RU": "Антарктида", "fa_IR": "قطب جنوب", "vi_VN": "Nam Cực", "km_KH": "អង់តាក់ទិក", "my_MM": "အန္တာတိက"},
+    "United States": {"zh_CN": "美国", "zh_TW": "美國", "ru_RU": "США", "fa_IR": "ایالات متحده", "vi_VN": "Hoa Kỳ", "km_KH": "សហរដ្ឋអាមេរិក", "my_MM": "အမေရိကန်"},
+    "United Kingdom": {"zh_CN": "英国", "zh_TW": "英國", "ru_RU": "Великобритания", "fa_IR": "بریتانیا", "vi_VN": "Vương quốc Anh", "km_KH": "ចក្រភពអង់គ្លេស", "my_MM": "ဗြိတိန်"},
+    "Japan": {"zh_CN": "日本", "zh_TW": "日本", "ru_RU": "Япония", "fa_IR": "ژاپن", "vi_VN": "Nhật Bản", "km_KH": "ជប៉ុន", "my_MM": "ဂျပန်"},
+    "South Korea": {"zh_CN": "韩国", "zh_TW": "韓國", "ru_RU": "Южная Корея", "fa_IR": "کره جنوبی", "vi_VN": "Hàn Quốc", "km_KH": "កូរ៉េខាងត្បូង", "my_MM": "တောင်ကိုရီးယား"},
+    "Hong Kong": {"zh_CN": "香港", "zh_TW": "香港", "ru_RU": "Гонконг", "fa_IR": "هنگ کنگ", "vi_VN": "Hồng Kông", "km_KH": "ហុងកុង", "my_MM": "ဟောင်ကောင်"},
+    "Taiwan": {"zh_CN": "台湾", "zh_TW": "台灣", "ru_RU": "Тайвань", "fa_IR": "تایوان", "vi_VN": "Đài Loan", "km_KH": "តៃវ៉ាន់", "my_MM": "ထိုင်ဝမ်"},
+    "Singapore": {"zh_CN": "新加坡", "zh_TW": "新加坡", "ru_RU": "Сингапур", "fa_IR": "سنگاپور", "vi_VN": "Singapore", "km_KH": "សិង្ហបុរី", "my_MM": "စင်ကာပူ"},
+    "Germany": {"zh_CN": "德国", "zh_TW": "德國", "ru_RU": "Германия", "fa_IR": "آلمان", "vi_VN": "Đức", "km_KH": "អាល្លឺម៉ង់", "my_MM": "ဂျာမနီ"},
+    "France": {"zh_CN": "法国", "zh_TW": "法國", "ru_RU": "Франция", "fa_IR": "فرانسه", "vi_VN": "Pháp", "km_KH": "បារាំង", "my_MM": "ပြင်သစ်"},
+    "Canada": {"zh_CN": "加拿大", "zh_TW": "加拿大", "ru_RU": "Канада", "fa_IR": "کانادا", "vi_VN": "Canada", "km_KH": "កាណាដា", "my_MM": "ကနေဒါ"},
+    "Australia": {"zh_CN": "澳大利亚", "zh_TW": "澳大利亞", "ru_RU": "Австралия", "fa_IR": "استرالیا", "vi_VN": "Úc", "km_KH": "អូស្ត្រាលី", "my_MM": "သြစတြေးလျ"},
+    "India": {"zh_CN": "印度", "zh_TW": "印度", "ru_RU": "Индия", "fa_IR": "هند", "vi_VN": "Ấn Độ", "km_KH": "ឥណ្ឌា", "my_MM": "အိန္ဒိယ"},
+    "Brazil": {"zh_CN": "巴西", "zh_TW": "巴西", "ru_RU": "Бразилия", "fa_IR": "برزیل", "vi_VN": "Brazil", "km_KH": "ប្រេស៊ីល", "my_MM": "ဘရာဇီး"},
+    "Netherlands": {"zh_CN": "荷兰", "zh_TW": "荷蘭", "ru_RU": "Нидерланды", "fa_IR": "هلند", "vi_VN": "Hà Lan", "km_KH": "ហូឡង់", "my_MM": "နယ်သာလန်"},
+    "Sweden": {"zh_CN": "瑞典", "zh_TW": "瑞典", "ru_RU": "Швеция", "fa_IR": "سوئد", "vi_VN": "Thụy Điển", "km_KH": "ស៊ុយអែត", "my_MM": "ဆွီဒင်"},
+    "Switzerland": {"zh_CN": "瑞士", "zh_TW": "瑞士", "ru_RU": "Швейцария", "fa_IR": "سوئیس", "vi_VN": "Thụy Sĩ", "km_KH": "ស្វ៊ីស", "my_MM": "ဆွစ်ဇာလန်"},
+    "Italy": {"zh_CN": "意大利", "zh_TW": "義大利", "ru_RU": "Италия", "fa_IR": "ایتالیا", "vi_VN": "Ý", "km_KH": "អ៊ីតាលី", "my_MM": "အီတလီ"},
+    "Spain": {"zh_CN": "西班牙", "zh_TW": "西班牙", "ru_RU": "Испания", "fa_IR": "اسپانیا", "vi_VN": "Tây Ban Nha", "km_KH": "អេស្ប៉ាញ", "my_MM": "စပိန်"},
+
+    # Forgot password
+    "Enter your email to receive a verification code, then set a new password.": {"zh_CN": "输入您的邮箱以接收验证码，然后设置新密码。", "zh_TW": "輸入您的電子郵件以接收驗證碼，然後設定新密碼。", "ru_RU": "Введите email для получения кода подтверждения, затем установите новый пароль.", "fa_IR": "ایمیل خود را برای دریافت کد تأیید وارد کنید، سپس رمز عبور جدید تنظیم کنید.", "vi_VN": "Nhập email để nhận mã xác nhận, sau đó đặt mật khẩu mới.", "km_KH": "បញ្ចូលអ៊ីមែលរបស់អ្នកដើម្បីទទួលលេខកូដផ្ទៀងផ្ទាត់ បន្ទាប់មកកំណត់ពាក្យសម្ងាត់ថ្មី។", "my_MM": "အီးမေးလ်ထည့်၍ အတည်ပြုကုဒ်ရယူပါ၊ ထို့နောက် စကားဝှက်အသစ်သတ်မှတ်ပါ။"},
+    "Enter registered email": {"zh_CN": "输入注册邮箱", "zh_TW": "輸入註冊電子郵件", "ru_RU": "Введите зарегистрированный email", "fa_IR": "ایمیل ثبت‌نام شده را وارد کنید", "vi_VN": "Nhập email đã đăng ký", "km_KH": "បញ្ចូលអ៊ីមែលដែលបានចុះឈ្មោះ", "my_MM": "မှတ်ပုံတင်ထားသောအီးမေးလ်ထည့်ပါ"},
+    "Reset Successful": {"zh_CN": "重置成功", "zh_TW": "重設成功", "ru_RU": "Сброс выполнен", "fa_IR": "بازنشانی موفق", "vi_VN": "Đặt lại thành công", "km_KH": "កំណត់ឡើងវិញជោគជ័យ", "my_MM": "ပြန်သတ်မှတ်အောင်မြင်"},
+    "Resetting...": {"zh_CN": "重置中...", "zh_TW": "重設中...", "ru_RU": "Сброс...", "fa_IR": "در حال بازنشانی...", "vi_VN": "Đang đặt lại...", "km_KH": "កំពុងកំណត់ឡើងវិញ...", "my_MM": "ပြန်သတ်မှတ်နေ..."},
+    "System not ready, please try again later": {"zh_CN": "系统未就绪，请稍后重试", "zh_TW": "系統未就緒，請稍後重試", "ru_RU": "Система не готова, попробуйте позже", "fa_IR": "سیستم آماده نیست، لطفا بعدا تلاش کنید", "vi_VN": "Hệ thống chưa sẵn sàng, vui lòng thử lại sau", "km_KH": "ប្រព័ន្ធមិនទាន់រួចរាល់ សូមព្យាយាមម្ដងទៀត", "my_MM": "စနစ်အဆင်သင့်မဖြစ်သေး၊ နောက်မှထပ်စမ်းပါ"},
+
+    # Help center
+    "Search articles...": {"zh_CN": "搜索文章...", "zh_TW": "搜尋文章...", "ru_RU": "Поиск статей...", "fa_IR": "جستجوی مقالات...", "vi_VN": "Tìm bài viết...", "km_KH": "ស្វែងរកអត្ថបទ...", "my_MM": "ဆောင်းပါးရှာ..."},
+    "No matching articles": {"zh_CN": "没有匹配的文章", "zh_TW": "沒有符合的文章", "ru_RU": "Статьи не найдены", "fa_IR": "مقاله‌ای مطابقت ندارد", "vi_VN": "Không tìm thấy bài viết", "km_KH": "គ្មានអត្ថបទដែលត្រូវគ្នា", "my_MM": "ကိုက်ညီသောဆောင်းပါးမရှိ"},
+    "No articles yet": {"zh_CN": "暂无文章", "zh_TW": "暫無文章", "ru_RU": "Пока нет статей", "fa_IR": "هنوز مقاله‌ای نیست", "vi_VN": "Chưa có bài viết", "km_KH": "មិនទាន់មានអត្ថបទ", "my_MM": "ဆောင်းပါးမရှိသေး"},
+    "Try different keywords": {"zh_CN": "尝试不同的关键词", "zh_TW": "嘗試不同的關鍵字", "ru_RU": "Попробуйте другие ключевые слова", "fa_IR": "کلمات کلیدی دیگری امتحان کنید", "vi_VN": "Thử từ khóa khác", "km_KH": "សាកល្បងពាក្យគន្លឹះផ្សេង", "my_MM": "အခြားသော့ချက်စာလုံးများဖြင့်စမ်းကြည့်ပါ"},
+    "Clear Search": {"zh_CN": "清除搜索", "zh_TW": "清除搜尋", "ru_RU": "Очистить поиск", "fa_IR": "پاک کردن جستجو", "vi_VN": "Xóa tìm kiếm", "km_KH": "សម្អាតការស្វែងរក", "my_MM": "ရှာဖွေမှုရှင်း"},
+
+    # Speed test
+    "Save to Downloads folder": {"zh_CN": "保存到下载文件夹", "zh_TW": "儲存到下載資料夾", "ru_RU": "Сохранить в папку Загрузки", "fa_IR": "ذخیره در پوشه دانلودها", "vi_VN": "Lưu vào thư mục Tải xuống", "km_KH": "រក្សាទុកក្នុងថតទាញយក", "my_MM": "ဒေါင်းလုဒ်ဖိုဒါတွင်သိမ်းပါ"},
+    "10MB: Quick test": {"zh_CN": "10MB：快速测试", "zh_TW": "10MB：快速測試", "ru_RU": "10МБ: Быстрый тест", "fa_IR": "10 مگابایت: تست سریع", "vi_VN": "10MB: Test nhanh", "km_KH": "10MB: សាកល្បងរហ័ស", "my_MM": "10MB: အမြန်စမ်းသပ်"},
+    "25MB: Standard test": {"zh_CN": "25MB：标准测试", "zh_TW": "25MB：標準測試", "ru_RU": "25МБ: Стандартный тест", "fa_IR": "25 مگابایت: تست استاندارد", "vi_VN": "25MB: Test tiêu chuẩn", "km_KH": "25MB: សាកល្បងស្តង់ដារ", "my_MM": "25MB: စံစမ်းသပ်"},
+    "Delete all logs except current": {"zh_CN": "删除当前日志以外的所有日志", "zh_TW": "刪除當前日誌以外的所有日誌", "ru_RU": "Удалить все журналы кроме текущего", "fa_IR": "حذف همه لاگ‌ها به جز لاگ فعلی", "vi_VN": "Xóa tất cả nhật ký trừ hiện tại", "km_KH": "លុបកំណត់ត្រាទាំងអស់លើកលែងបច្ចុប្បន្ន", "my_MM": "လက်ရှိမှတ်တမ်းမှလွဲ၍ အားလုံးဖျက်"},
+    "Open log directory": {"zh_CN": "打开日志目录", "zh_TW": "開啟日誌目錄", "ru_RU": "Открыть папку журналов", "fa_IR": "باز کردن پوشه لاگ", "vi_VN": "Mở thư mục nhật ký", "km_KH": "បើកថតកំណត់ត្រា", "my_MM": "မှတ်တမ်းဖိုဒါဖွင့်"},
+
+    # Version
+    "Version": {"zh_CN": "版本", "zh_TW": "版本", "ru_RU": "Версия", "fa_IR": "نسخه", "vi_VN": "Phiên bản", "km_KH": "កំណែ", "my_MM": "ဗားရှင်း"},
+    "Powered by": {"zh_CN": "技术支持", "zh_TW": "技術支援", "ru_RU": "На базе", "fa_IR": "قدرت گرفته از", "vi_VN": "Được hỗ trợ bởi", "km_KH": "ដំណើរការដោយ", "my_MM": "ပံ့ပိုးသည်"},
+    "Open Source Licenses": {"zh_CN": "开源许可证", "zh_TW": "開源授權", "ru_RU": "Лицензии открытого кода", "fa_IR": "مجوزهای متن‌باز", "vi_VN": "Giấy phép mã nguồn mở", "km_KH": "អាជ្ញាប័ណ្ណកូដចំហ", "my_MM": "အိုပင်ဆိုစ်လိုင်စင်"},
+    "Website": {"zh_CN": "官网", "zh_TW": "官網", "ru_RU": "Сайт", "fa_IR": "وب‌سایت", "vi_VN": "Website", "km_KH": "គេហទំព័រ", "my_MM": "ဝဘ်ဆိုက်"},
+    "Copyright": {"zh_CN": "版权", "zh_TW": "版權", "ru_RU": "Авторские права", "fa_IR": "حق نشر", "vi_VN": "Bản quyền", "km_KH": "រក្សាសិទ្ធិ", "my_MM": "မူပိုင်ခွင့်"},
+    "All rights reserved.": {"zh_CN": "保留所有权利。", "zh_TW": "保留所有權利。", "ru_RU": "Все права защищены.", "fa_IR": "تمامی حقوق محفوظ است.", "vi_VN": "Bảo lưu mọi quyền.", "km_KH": "រក្សាសិទ្ធិគ្រប់យ៉ាង។", "my_MM": "မူပိုင်ခွင့်အားလုံးထိန်းသိမ်းထားပါသည်။"},
+
+    # Running mode
+    "Running Mode": {"zh_CN": "运行模式", "zh_TW": "執行模式", "ru_RU": "Режим работы", "fa_IR": "حالت اجرا", "vi_VN": "Chế độ chạy", "km_KH": "របៀបដំណើរការ", "my_MM": "အလုပ်လုပ်ပုံ"},
+    "Rule": {"zh_CN": "规则", "zh_TW": "規則", "ru_RU": "Правило", "fa_IR": "قانون", "vi_VN": "Quy tắc", "km_KH": "ច្បាប់", "my_MM": "စည်းမျဉ်း"},
+    "IP Address": {"zh_CN": "IP 地址", "zh_TW": "IP 位址", "ru_RU": "IP-адрес", "fa_IR": "آدرس IP", "vi_VN": "Địa chỉ IP", "km_KH": "អាសយដ្ឋាន IP", "my_MM": "IP လိပ်စာ"},
+
+    # Help articles
+    "Article Content": {"zh_CN": "文章内容", "zh_TW": "文章內容", "ru_RU": "Содержание статьи", "fa_IR": "محتوای مقاله", "vi_VN": "Nội dung bài viết", "km_KH": "មាតិកាអត្ថបទ", "my_MM": "ဆောင်းပါးအကြောင်းအရာ"},
+    "Image": {"zh_CN": "图片", "zh_TW": "圖片", "ru_RU": "Изображение", "fa_IR": "تصویر", "vi_VN": "Hình ảnh", "km_KH": "រូបភាព", "my_MM": "ပုံ"},
+    "Loading image...": {"zh_CN": "加载图片中...", "zh_TW": "載入圖片中...", "ru_RU": "Загрузка изображения...", "fa_IR": "در حال بارگذاری تصویر...", "vi_VN": "Đang tải hình...", "km_KH": "កំពុងផ្ទុករូបភាព...", "my_MM": "ပုံဖွင့်နေ..."},
+    "Image load failed": {"zh_CN": "图片加载失败", "zh_TW": "圖片載入失敗", "ru_RU": "Ошибка загрузки изображения", "fa_IR": "بارگذاری تصویر ناموفق", "vi_VN": "Tải hình thất bại", "km_KH": "ផ្ទុករូបភាពបរាជ័យ", "my_MM": "ပုံဖွင့်မအောင်"},
+    "Was this article helpful?": {"zh_CN": "这篇文章有帮助吗？", "zh_TW": "這篇文章有幫助嗎？", "ru_RU": "Была ли статья полезной?", "fa_IR": "آیا این مقاله مفید بود؟", "vi_VN": "Bài viết này có hữu ích không?", "km_KH": "តើអត្ថបទនេះមានប្រយោជន៍ទេ?", "my_MM": "ဒီဆောင်းပါးအသုံးဝင်ပါသလား?"},
+
+    # Authentication
+    "Email/Username": {"zh_CN": "邮箱/用户名", "zh_TW": "電子郵件/使用者名稱", "ru_RU": "Email/Имя пользователя", "fa_IR": "ایمیل/نام کاربری", "vi_VN": "Email/Tên người dùng", "km_KH": "អ៊ីមែល/ឈ្មោះអ្នកប្រើ", "my_MM": "အီးမေးလ်/အသုံးပြုသူအမည်"},
+    "Enter email or username": {"zh_CN": "输入邮箱或用户名", "zh_TW": "輸入電子郵件或使用者名稱", "ru_RU": "Введите email или имя пользователя", "fa_IR": "ایمیل یا نام کاربری را وارد کنید", "vi_VN": "Nhập email hoặc tên người dùng", "km_KH": "បញ្ចូលអ៊ីមែល ឬឈ្មោះអ្នកប្រើ", "my_MM": "အီးမေးလ် သို့ အသုံးပြုသူအမည်ထည့်ပါ"},
+    "Enter password": {"zh_CN": "输入密码", "zh_TW": "輸入密碼", "ru_RU": "Введите пароль", "fa_IR": "رمز عبور را وارد کنید", "vi_VN": "Nhập mật khẩu", "km_KH": "បញ្ចូលពាក្យសម្ងាត់", "my_MM": "စကားဝှက်ထည့်ပါ"},
+    "Remember password": {"zh_CN": "记住密码", "zh_TW": "記住密碼", "ru_RU": "Запомнить пароль", "fa_IR": "یادآوری رمز عبور", "vi_VN": "Ghi nhớ mật khẩu", "km_KH": "ចាំពាក្យសម្ងាត់", "my_MM": "စကားဝှက်မှတ်ထား"},
+    "Have any questions? Visit": {"zh_CN": "有任何问题？访问", "zh_TW": "有任何問題？訪問", "ru_RU": "Есть вопросы? Посетите", "fa_IR": "سوالی دارید؟ مراجعه کنید به", "vi_VN": "Có câu hỏi? Truy cập", "km_KH": "មានសំណួរ? សូមចូលទៅ", "my_MM": "မေးစရာရှိပါသလား?"},
+
+    # Payment
+    "Order Detail": {"zh_CN": "订单详情", "zh_TW": "訂單詳情", "ru_RU": "Детали заказа", "fa_IR": "جزئیات سفارش", "vi_VN": "Chi tiết đơn hàng", "km_KH": "ព័ត៌មានលម្អិតការបញ្ជាទិញ", "my_MM": "အော်ဒါအသေးစိတ်"},
+    "Select Payment": {"zh_CN": "选择支付方式", "zh_TW": "選擇付款方式", "ru_RU": "Выберите способ оплаты", "fa_IR": "انتخاب روش پرداخت", "vi_VN": "Chọn thanh toán", "km_KH": "ជ្រើសរើសការទូទាត់", "my_MM": "ငွေပေးချေမှုရွေး"},
+    "Pay Now": {"zh_CN": "立即支付", "zh_TW": "立即付款", "ru_RU": "Оплатить", "fa_IR": "پرداخت", "vi_VN": "Thanh toán ngay", "km_KH": "បង់ឥឡូវ", "my_MM": "ယခုပေးချေ"},
+    "View Details": {"zh_CN": "查看详情", "zh_TW": "檢視詳情", "ru_RU": "Подробнее", "fa_IR": "مشاهده جزئیات", "vi_VN": "Xem chi tiết", "km_KH": "មើលព័ត៌មានលម្អិត", "my_MM": "အသေးစိတ်ကြည့်"},
+    "Plan Information": {"zh_CN": "套餐信息", "zh_TW": "方案資訊", "ru_RU": "Информация о плане", "fa_IR": "اطلاعات طرح", "vi_VN": "Thông tin gói", "km_KH": "ព័ត៌មានគម្រោង", "my_MM": "အစီအစဉ်အချက်အလက်"},
+    "Plan Name:": {"zh_CN": "套餐名称：", "zh_TW": "方案名稱：", "ru_RU": "Название плана:", "fa_IR": "نام طرح:", "vi_VN": "Tên gói:", "km_KH": "ឈ្មោះគម្រោង:", "my_MM": "အစီအစဉ်အမည်:"},
+    "Period:": {"zh_CN": "周期：", "zh_TW": "週期：", "ru_RU": "Период:", "fa_IR": "دوره:", "vi_VN": "Chu kỳ:", "km_KH": "រយៈពេល:", "my_MM": "ကာလ:"},
+    "Payment Information": {"zh_CN": "支付信息", "zh_TW": "付款資訊", "ru_RU": "Информация об оплате", "fa_IR": "اطلاعات پرداخت", "vi_VN": "Thông tin thanh toán", "km_KH": "ព័ត៌មានការទូទាត់", "my_MM": "ငွေပေးချေမှုအချက်အလက်"},
+    "Original Price:": {"zh_CN": "原价：", "zh_TW": "原價：", "ru_RU": "Исходная цена:", "fa_IR": "قیمت اصلی:", "vi_VN": "Giá gốc:", "km_KH": "តម្លៃដើម:", "my_MM": "မူလစျေးနှုန်း:"},
+    "Discount:": {"zh_CN": "折扣：", "zh_TW": "折扣：", "ru_RU": "Скидка:", "fa_IR": "تخفیف:", "vi_VN": "Giảm giá:", "km_KH": "បញ្ចុះតម្លៃ:", "my_MM": "လျှော့စျေး:"},
+    "Final Amount:": {"zh_CN": "最终金额：", "zh_TW": "最終金額：", "ru_RU": "Итоговая сумма:", "fa_IR": "مبلغ نهایی:", "vi_VN": "Số tiền cuối:", "km_KH": "ចំនួនទឹកប្រាក់ចុងក្រោយ:", "my_MM": "နောက်ဆုံးငွေပမာဏ:"},
+    "Time Information": {"zh_CN": "时间信息", "zh_TW": "時間資訊", "ru_RU": "Информация о времени", "fa_IR": "اطلاعات زمان", "vi_VN": "Thông tin thời gian", "km_KH": "ព័ត៌មានពេលវេលា", "my_MM": "အချိန်အချက်အလက်"},
+    "Amount to Pay": {"zh_CN": "应付金额", "zh_TW": "應付金額", "ru_RU": "Сумма к оплате", "fa_IR": "مبلغ قابل پرداخت", "vi_VN": "Số tiền phải trả", "km_KH": "ចំនួនទឹកប្រាក់ត្រូវបង់", "my_MM": "ပေးရမည့်ငွေပမာဏ"},
+    "Fee: %1%": {"zh_CN": "手续费：%1%", "zh_TW": "手續費：%1%", "ru_RU": "Комиссия: %1%", "fa_IR": "کارمزد: %1%", "vi_VN": "Phí: %1%", "km_KH": "ថ្លៃសេវា: %1%", "my_MM": "အခကြေးငွေ: %1%"},
+
+    # Billing periods
+    "Monthly": {"zh_CN": "月付", "zh_TW": "月付", "ru_RU": "Ежемесячно", "fa_IR": "ماهانه", "vi_VN": "Hàng tháng", "km_KH": "ប្រចាំខែ", "my_MM": "လစဉ်"},
+    "Quarterly": {"zh_CN": "季付", "zh_TW": "季付", "ru_RU": "Ежеквартально", "fa_IR": "سه ماهه", "vi_VN": "Hàng quý", "km_KH": "ត្រីមាស", "my_MM": "သုံးလတစ်ကြိမ်"},
+    "Semi-Annual": {"zh_CN": "半年付", "zh_TW": "半年付", "ru_RU": "Полугодовой", "fa_IR": "شش ماهه", "vi_VN": "Nửa năm", "km_KH": "កន្លះឆ្នាំ", "my_MM": "နှစ်ဝက်"},
+    "Annual": {"zh_CN": "年付", "zh_TW": "年付", "ru_RU": "Ежегодно", "fa_IR": "سالانه", "vi_VN": "Hàng năm", "km_KH": "ប្រចាំឆ្នាំ", "my_MM": "နှစ်စဉ်"},
+    "2 Years": {"zh_CN": "两年", "zh_TW": "兩年", "ru_RU": "2 года", "fa_IR": "2 سال", "vi_VN": "2 năm", "km_KH": "2 ឆ្នាំ", "my_MM": "2 နှစ်"},
+    "3 Years": {"zh_CN": "三年", "zh_TW": "三年", "ru_RU": "3 года", "fa_IR": "3 سال", "vi_VN": "3 năm", "km_KH": "3 ឆ្នាំ", "my_MM": "3 နှစ်"},
+    "One-time": {"zh_CN": "一次性", "zh_TW": "一次性", "ru_RU": "Единоразово", "fa_IR": "یک‌بار", "vi_VN": "Một lần", "km_KH": "មួយដង", "my_MM": "တစ်ကြိမ်"},
+    "Plan #%1": {"zh_CN": "套餐 #%1", "zh_TW": "方案 #%1", "ru_RU": "План #%1", "fa_IR": "طرح #%1", "vi_VN": "Gói #%1", "km_KH": "គម្រោង #%1", "my_MM": "အစီအစဉ် #%1"},
+    "Select Subscription Period": {"zh_CN": "选择订阅周期", "zh_TW": "選擇訂閱週期", "ru_RU": "Выберите период подписки", "fa_IR": "دوره اشتراک را انتخاب کنید", "vi_VN": "Chọn chu kỳ đăng ký", "km_KH": "ជ្រើសរើសរយៈពេលការជាវ", "my_MM": "စာရင်းသွင်းကာလရွေး"},
+    "Plan: %1": {"zh_CN": "套餐：%1", "zh_TW": "方案：%1", "ru_RU": "План: %1", "fa_IR": "طرح: %1", "vi_VN": "Gói: %1", "km_KH": "គម្រោង: %1", "my_MM": "အစီအစဉ်: %1"},
+    "Choose your billing cycle:": {"zh_CN": "选择您的计费周期：", "zh_TW": "選擇您的計費週期：", "ru_RU": "Выберите период оплаты:", "fa_IR": "چرخه صورتحساب خود را انتخاب کنید:", "vi_VN": "Chọn chu kỳ thanh toán:", "km_KH": "ជ្រើសរើសវដ្តវិក្កយបត្រ:", "my_MM": "ငွေပေးချေမှုစက်ဝန်းရွေးပါ:"},
+    "Unknown Period": {"zh_CN": "未知周期", "zh_TW": "未知週期", "ru_RU": "Неизвестный период", "fa_IR": "دوره نامشخص", "vi_VN": "Chu kỳ không xác định", "km_KH": "រយៈពេលមិនស្គាល់", "my_MM": "မသိသောကာလ"},
+    "≈ %1%2/mo": {"zh_CN": "≈ %1%2/月", "zh_TW": "≈ %1%2/月", "ru_RU": "≈ %1%2/мес", "fa_IR": "≈ %1%2/ماه", "vi_VN": "≈ %1%2/tháng", "km_KH": "≈ %1%2/ខែ", "my_MM": "≈ %1%2/လ"},
+    "No pricing options available": {"zh_CN": "暂无可用的价格选项", "zh_TW": "暫無可用的價格選項", "ru_RU": "Нет доступных вариантов цен", "fa_IR": "گزینه قیمتی موجود نیست", "vi_VN": "Không có tùy chọn giá", "km_KH": "គ្មានជម្រើសតម្លៃ", "my_MM": "စျေးနှုန်းရွေးချယ်မှုမရှိ"},
+    "Continue": {"zh_CN": "继续", "zh_TW": "繼續", "ru_RU": "Продолжить", "fa_IR": "ادامه", "vi_VN": "Tiếp tục", "km_KH": "បន្ត", "my_MM": "ဆက်သွား"},
+
+    # Profile
+    "Users": {"zh_CN": "用户", "zh_TW": "使用者", "ru_RU": "Пользователи", "fa_IR": "کاربران", "vi_VN": "Người dùng", "km_KH": "អ្នកប្រើប្រាស់", "my_MM": "အသုံးပြုသူများ"},
+    "Account ID: ": {"zh_CN": "账户ID：", "zh_TW": "帳戶ID：", "ru_RU": "ID аккаунта: ", "fa_IR": "شناسه حساب: ", "vi_VN": "ID tài khoản: ", "km_KH": "លេខសម្គាល់គណនី: ", "my_MM": "အကောင့် ID: "},
+    "Monthly Traffic": {"zh_CN": "月流量", "zh_TW": "月流量", "ru_RU": "Месячный трафик", "fa_IR": "ترافیک ماهانه", "vi_VN": "Lưu lượng tháng", "km_KH": "ចរាចរប្រចាំខែ", "my_MM": "လစဉ်အသွားအလာ"},
+    "Days Used": {"zh_CN": "已用天数", "zh_TW": "已用天數", "ru_RU": "Использовано дней", "fa_IR": "روزهای استفاده شده", "vi_VN": "Số ngày đã dùng", "km_KH": "ថ្ងៃបានប្រើ", "my_MM": "အသုံးပြုပြီးရက်"},
+    "Active": {"zh_CN": "活跃", "zh_TW": "活躍", "ru_RU": "Активен", "fa_IR": "فعال", "vi_VN": "Hoạt động", "km_KH": "សកម្ម", "my_MM": "အသက်ဝင်"},
+    "Account Actions": {"zh_CN": "账户操作", "zh_TW": "帳戶操作", "ru_RU": "Действия с аккаунтом", "fa_IR": "عملیات حساب", "vi_VN": "Thao tác tài khoản", "km_KH": "សកម្មភាពគណនី", "my_MM": "အကောင့်လုပ်ဆောင်ချက်"},
+    "Reconnecting...": {"zh_CN": "正在重新连接...", "zh_TW": "正在重新連接...", "ru_RU": "Переподключение...", "fa_IR": "در حال اتصال مجدد...", "vi_VN": "Đang kết nối lại...", "km_KH": "កំពុងភ្ជាប់ឡើងវិញ...", "my_MM": "ပြန်ချိတ်ဆက်နေ..."},
+    "Connection Error": {"zh_CN": "连接错误", "zh_TW": "連接錯誤", "ru_RU": "Ошибка соединения", "fa_IR": "خطای اتصال", "vi_VN": "Lỗi kết nối", "km_KH": "កំហុសការភ្ជាប់", "my_MM": "ချိတ်ဆက်အမှား"},
+
+    # Chinese UI strings (for translation from Chinese source)
+    "授权提示": {"zh_CN": "授权提示", "zh_TW": "授權提示", "ru_RU": "Уведомление о лицензии", "fa_IR": "اعلان مجوز", "vi_VN": "Thông báo bản quyền", "km_KH": "ការជូនដំណឹងអាជ្ញាប័ណ្ណ", "my_MM": "လိုင်စင်အကြောင်းကြား"},
+    "稍后提醒": {"zh_CN": "稍后提醒", "zh_TW": "稍後提醒", "ru_RU": "Напомнить позже", "fa_IR": "بعدا یادآوری کن", "vi_VN": "Nhắc sau", "km_KH": "រំលឹកពេលក្រោយ", "my_MM": "နောက်မှသတိပေး"},
+    "我知道了": {"zh_CN": "我知道了", "zh_TW": "我知道了", "ru_RU": "Понятно", "fa_IR": "فهمیدم", "vi_VN": "Tôi hiểu", "km_KH": "ខ្ញុំយល់ហើយ", "my_MM": "နားလည်ပါပြီ"},
+    "立即更新": {"zh_CN": "立即更新", "zh_TW": "立即更新", "ru_RU": "Обновить сейчас", "fa_IR": "الان به‌روزرسانی کن", "vi_VN": "Cập nhật ngay", "km_KH": "ធ្វើបច្ចុប្បន្នភាពឥឡូវ", "my_MM": "ယခုအပ်ဒိတ်လုပ်"},
+    "确定": {"zh_CN": "确定", "zh_TW": "確定", "ru_RU": "ОК", "fa_IR": "تایید", "vi_VN": "Xác nhận", "km_KH": "យល់ព្រម", "my_MM": "အိုကေ"},
+    "授权过期": {"zh_CN": "授权过期", "zh_TW": "授權過期", "ru_RU": "Лицензия истекла", "fa_IR": "مجوز منقضی شده", "vi_VN": "Bản quyền hết hạn", "km_KH": "អាជ្ញាប័ណ្ណផុតកំណត់", "my_MM": "လိုင်စင်သက်တမ်းကုန်"},
+    "设备超限": {"zh_CN": "设备超限", "zh_TW": "裝置超限", "ru_RU": "Превышено кол-во устройств", "fa_IR": "تعداد دستگاه بیش از حد مجاز", "vi_VN": "Vượt giới hạn thiết bị", "km_KH": "ឧបករណ៍លើសកំណត់", "my_MM": "စက်ကိရိယာအရေအတွက်ကျော်"},
+    "更新提示": {"zh_CN": "更新提示", "zh_TW": "更新提示", "ru_RU": "Уведомление об обновлении", "fa_IR": "اعلان به‌روزرسانی", "vi_VN": "Thông báo cập nhật", "km_KH": "ការជូនដំណឹងអាប់ដេត", "my_MM": "အပ်ဒိတ်အကြောင်းကြား"},
+    "群组": {"zh_CN": "群组", "zh_TW": "群組", "ru_RU": "Группа", "fa_IR": "گروه", "vi_VN": "Nhóm", "km_KH": "ក្រុម", "my_MM": "အုပ်စု"},
+    "安全错误": {"zh_CN": "安全错误", "zh_TW": "安全錯誤", "ru_RU": "Ошибка безопасности", "fa_IR": "خطای امنیتی", "vi_VN": "Lỗi bảo mật", "km_KH": "កំហុorg សុវត្ថិភាព", "my_MM": "လုံခြုံရေးအမှား"},
 }
 
 
@@ -1399,7 +1562,8 @@ def extract_translations(ts_file):
 
 
 def main():
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # scripts/build/translate_ts.py -> scripts/build -> scripts -> JinGo (project root)
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     trans_dir = os.path.join(base_dir, 'resources', 'translations')
 
     # First process zh_CN

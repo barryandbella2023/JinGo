@@ -19,76 +19,29 @@ set -o pipefail  # 管道中的错误也触发退出
 # ██╔═══╝  ██║     ██╔══██║   ██║   ██╔══╝  ██║   ██║██╔══██╗██║╚██╔╝██║
 # ██║      ███████╗██║  ██║   ██║   ██║     ╚██████╔╝██║  ██║██║ ╚═╝ ██║
 # ╚═╝      ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝
-#                    平台配置 - 修改这里的值来调整构建设置
+#              用户配置 - 修改下面的路径以匹配您的环境
 # ============================================================================
 
-# 加载环境配置
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [[ -f "$SCRIPT_DIR/../env.sh" ]]; then
-    source "$SCRIPT_DIR/../env.sh"
+# --------------------- Qt 路径配置 ---------------------
+# Qt macOS 安装路径
+# 优先使用环境变量 QT_MACOS_PATH 或 Qt6_DIR，否则使用默认值
+# 本地开发请修改下面的默认路径，或设置环境变量
+# 示例: "/Users/yourname/Qt/6.8.0/macos" 或 "/opt/Qt/6.8.0/macos"
+if [[ -n "${QT_MACOS_PATH:-}" ]]; then
+    : # 使用已设置的 QT_MACOS_PATH
+elif [[ -n "${Qt6_DIR:-}" ]]; then
+    QT_MACOS_PATH="$Qt6_DIR"
+else
+    QT_MACOS_PATH="/Volumes/mindata/Applications/Qt/6.10.0/macos"
 fi
+
+# --------------------- 脚本初始化 ---------------------
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 加载白标资源复制脚本
 if [[ -f "$SCRIPT_DIR/copy-brand-assets.sh" ]]; then
     source "$SCRIPT_DIR/copy-brand-assets.sh"
 fi
-
-# --------------------- Qt 配置 ---------------------
-# Qt macOS 安装路径 (自动检测，可通过环境变量 QT_MACOS_PATH 覆盖)
-# 自动检测 Qt 路径
-auto_detect_qt_macos() {
-    # 优先使用环境变量
-    if [[ -n "$QT_MACOS_PATH" ]] && [[ -d "$QT_MACOS_PATH" ]]; then
-        echo "$QT_MACOS_PATH"
-        return 0
-    fi
-
-    # 使用 env.sh 检测的路径
-    if [[ -n "$JINGO_QT_BASE" ]] && [[ -n "$JINGO_QT_VERSION" ]]; then
-        local qt_path="$JINGO_QT_BASE/$JINGO_QT_VERSION/macos"
-        if [[ -d "$qt_path" ]]; then
-            echo "$qt_path"
-            return 0
-        fi
-    fi
-
-    # 搜索常见路径
-    local search_paths=(
-        # 开发环境
-        "/Volumes/mindata/Applications/Qt/6.10.0/macos"
-        "/Volumes/mindata/Applications/Qt/6.10.1/macos"
-        # 打包环境
-        "/Volumes/mindata/Qt/6.10.0/macos"
-        "/Volumes/mindata/Qt/6.10.1/macos"
-        # 其他常见路径
-        "/opt/Qt/6.10.0/macos"
-        "/opt/Qt/6.10.1/macos"
-        "$HOME/Qt/6.10.0/macos"
-        "$HOME/Qt/6.10.1/macos"
-    )
-
-    for path in "${search_paths[@]}"; do
-        if [[ -d "$path" ]]; then
-            echo "$path"
-            return 0
-        fi
-    done
-
-    # 通配符搜索最新版本
-    for base in "/Volumes/mindata/Applications/Qt" "/Volumes/mindata/Qt" "/opt/Qt" "$HOME/Qt"; do
-        if [[ -d "$base" ]]; then
-            local latest=$(ls -d "$base"/*/macos 2>/dev/null | sort -V | tail -1)
-            if [[ -d "$latest" ]]; then
-                echo "$latest"
-                return 0
-            fi
-        fi
-    done
-
-    return 1
-}
-
-QT_MACOS_PATH="${QT_MACOS_PATH:-$(auto_detect_qt_macos)}"
 
 # --------------------- macOS 配置 ---------------------
 # 最低 macOS 版本
@@ -1360,8 +1313,15 @@ main() {
 
     refresh_extension_plist
     build_project
-    fix_extension_copy
-    sign_app
+
+    # 仅在需要签名时执行Extension复制和签名
+    if [[ "$SKIP_SIGN" != true ]]; then
+        fix_extension_copy
+        sign_app
+    else
+        print_info "跳过签名模式：跳过 Extension 复制和代码签名"
+    fi
+
     verify_app
     create_dmg
     copy_to_release

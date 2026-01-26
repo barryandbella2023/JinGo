@@ -19,8 +19,28 @@ set -o pipefail  # 管道中的错误也触发退出
 # ██╔═══╝  ██║     ██╔══██║   ██║   ██╔══╝  ██║   ██║██╔══██╗██║╚██╔╝██║
 # ██║      ███████╗██║  ██║   ██║   ██║     ╚██████╔╝██║  ██║██║ ╚═╝ ██║
 # ╚═╝      ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝
-#                    平台配置 - 修改这里的值来调整构建设置
+#              用户配置 - 修改下面的路径以匹配您的环境
 # ============================================================================
+
+# --------------------- Qt 路径配置 ---------------------
+# Qt Linux 安装路径 (gcc_64 目录)
+# 优先使用环境变量 QT_DIR 或 Qt6_DIR，否则使用默认值
+# 本地开发请修改下面的默认路径，或设置环境变量
+# 示例: "/opt/Qt/6.8.0/gcc_64" 或 "/home/yourname/Qt/6.8.0/gcc_64"
+if [[ -n "${QT_DIR:-}" ]]; then
+    : # 使用已设置的 QT_DIR
+elif [[ -n "${Qt6_DIR:-}" ]]; then
+    QT_DIR="$Qt6_DIR"
+else
+    QT_DIR="/mnt/dev/Qt/6.10.1/gcc_64"
+fi
+
+# --------------------- 构建配置 ---------------------
+# 是否使用 Ninja (推荐，更快)
+USE_NINJA=true
+
+# --------------------- 脚本初始化 ---------------------
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 错误处理
 trap 'on_error $LINENO' ERR
@@ -31,89 +51,10 @@ on_error() {
     exit 1
 }
 
-# 加载环境配置
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [[ -f "$SCRIPT_DIR/../env.sh" ]]; then
-    source "$SCRIPT_DIR/../env.sh"
-fi
-
 # 加载白标资源复制脚本
 if [[ -f "$SCRIPT_DIR/copy-brand-assets.sh" ]]; then
     source "$SCRIPT_DIR/copy-brand-assets.sh"
 fi
-
-# --------------------- Qt 配置 ---------------------
-# 自动检测 Qt Linux 路径
-auto_detect_qt_linux() {
-    # 优先使用环境变量
-    if [[ -n "$Qt6_DIR" ]] && [[ -d "$Qt6_DIR" ]]; then
-        echo "$Qt6_DIR"
-        return 0
-    fi
-
-    # 使用 env.sh 检测的路径
-    if [[ -n "$JINGO_QT_BASE" ]] && [[ -n "$JINGO_QT_VERSION" ]]; then
-        local qt_path="$JINGO_QT_BASE/$JINGO_QT_VERSION/gcc_64"
-        if [[ -d "$qt_path" ]]; then
-            echo "$qt_path"
-            return 0
-        fi
-    fi
-
-    # 搜索常见路径
-    local search_paths=(
-        # 开发环境
-        "/mnt/develop/Qt/6.10.0/gcc_64"
-        "/mnt/develop/Qt/6.10.1/gcc_64"
-        # 打包环境
-        "/mnt/dev/Qt/6.10.0/gcc_64"
-        "/mnt/dev/Qt/6.10.1/gcc_64"
-        # 其他常见路径
-        "/opt/Qt/6.10.0/gcc_64"
-        "/opt/Qt/6.10.1/gcc_64"
-        "$HOME/Qt/6.10.0/gcc_64"
-        "$HOME/Qt/6.10.1/gcc_64"
-        # 系统路径
-        "/usr/lib/x86_64-linux-gnu/qt6"
-        "/usr/lib/qt6"
-    )
-
-    for path in "${search_paths[@]}"; do
-        if [[ -d "$path" ]]; then
-            echo "$path"
-            return 0
-        fi
-    done
-
-    # 通配符搜索最新版本
-    for base in "/mnt/develop/Qt" "/mnt/dev/Qt" "/opt/Qt" "$HOME/Qt"; do
-        if [[ -d "$base" ]]; then
-            local latest=$(ls -d "$base"/*/gcc_64 2>/dev/null | sort -V | tail -1)
-            if [[ -d "$latest" ]]; then
-                echo "$latest"
-                return 0
-            fi
-        fi
-    done
-
-    return 1
-}
-
-QT_DIR="$(auto_detect_qt_linux)"
-
-# Qt 自动检测路径列表 (作为备用)
-QT_SEARCH_PATHS=(
-    "/mnt/develop/Qt/*/gcc_64"
-    "/mnt/dev/Qt/*/gcc_64"
-    "/opt/Qt/*/gcc_64"
-    "$HOME/Qt/*/gcc_64"
-    "/usr/lib/x86_64-linux-gnu/qt6"
-    "/usr/lib/qt6"
-)
-
-# --------------------- 构建配置 ---------------------
-# 是否使用 Ninja (推荐，更快)
-USE_NINJA=true
 
 # --------------------- 应用信息 ---------------------
 APP_NAME="JinGo"

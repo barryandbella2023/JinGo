@@ -9,6 +9,7 @@
 - **多协议支持**: 基于 Xray 核心，支持 VMess、VLESS、Trojan、Shadowsocks 等
 - **多语言**: 支持 8 种语言（中文、英文、越南语、高棉语、缅甸语、俄语、波斯语等）
 - **白标定制**: 支持品牌定制和多租户部署
+- **代码保护**: 核心逻辑编译为静态库（JinDoCore）
 
 ## 项目架构
 
@@ -24,67 +25,93 @@ JinGo/                          # 主应用项目
 │   ├── superray/              # SuperRay (Xray 封装库)
 │   └── android_openssl/       # Android OpenSSL
 └── scripts/                   # 构建和部署脚本
-
-JinDo/                          # 核心静态库项目（独立仓库）
 ```
 
 ## 快速开始
 
 ### 前置条件
 
-- **Qt**: 6.10.0 或更高版本
+- **Qt**: 6.5+ (推荐 6.8.1 LTS 或 6.10.0)
 - **CMake**: 3.21+
 - **编译器**:
   - macOS/iOS: Xcode 15+
-  - Android: NDK 26.1+
-  - Windows: Visual Studio 2022
+  - Android: NDK 27.2+
+  - Windows: MinGW 13+ 或 Visual Studio 2022
   - Linux: GCC 11+ 或 Clang 14+
 
 ### 编译步骤
 
-#### 1. 编译 JinDoCore 静态库
+#### 1. Fork 仓库并配置白标
 
 ```bash
-# 进入 JinDo 项目目录
-cd ../JinDo
+# 1. Fork 本仓库到自己的 GitHub 账号
 
-# Android (全架构)
-./scripts/build-android.sh --clean --all-abis
+# 2. Clone 你的 fork
+git clone https://github.com/YOUR_USERNAME/JinGo.git
+cd JinGo
 
-# macOS
-./scripts/build-macos.sh --clean
+# 3. 创建你的白标配置
+# 复制模板到新的品牌目录
+cp -r white-labeling/1 white-labeling/YOUR_BRAND
 
-# iOS
-./scripts/build-ios.sh --clean
+# 4. 修改白标配置文件
+# 编辑 white-labeling/YOUR_BRAND/bundle_config.json
+{
+    "panel_url": "https://your-api-server.com",
+    "app_name": "YourApp",
+    "support_email": "support@your-domain.com",
+    ...
+}
 
-# Linux
-./scripts/build-linux.sh --clean
-
-# Windows (PowerShell)
-.\scripts\build-windows.ps1 -Clean
+# 5. 替换应用图标
+# 将你的图标放入 white-labeling/YOUR_BRAND/icons/
+#   - app.png (1024x1024, 通用图标)
+#   - app.icns (macOS 图标)
+#   - app.ico (Windows 图标)
+#   - ios/ (iOS 各尺寸图标)
+#   - android/ (Android 各密度图标)
 ```
 
-#### 2. 编译 JinGo 应用
+#### 2. 编译应用
+
+所有构建脚本都在 `scripts/build/` 目录下：
 
 ```bash
-# 进入 JinGo 项目目录
-cd ../JinGo
+# Android APK
+./scripts/build/build-android.sh --release --abi arm64-v8a
+# 或编译全架构
+./scripts/build/build-android.sh --release --abi all
 
-# Android APK (全架构)
-./scripts/build/build-android.sh --clean --release --abi all
+# macOS App (Universal Binary: arm64 + x86_64)
+./scripts/build/build-macos.sh --release
 
-# macOS App
-./scripts/build/build-macos.sh --clean --release
-
-# iOS App
-./scripts/build/build-ios.sh --clean --release
+# iOS App (生成 IPA)
+./scripts/build/build-ios.sh --release
 
 # Linux
-./scripts/build/build-linux.sh --clean --release
+./scripts/build/build-linux.sh --release
 
 # Windows (PowerShell)
-.\scripts\build\build-windows.ps1 -Clean -Release
+.\scripts\build\build-windows.ps1
 ```
+
+#### 3. 指定白标品牌编译
+
+```bash
+# 使用 --brand 参数指定品牌目录
+./scripts/build/build-macos.sh --release --brand YOUR_BRAND
+./scripts/build/build-android.sh --release --brand YOUR_BRAND
+./scripts/build/build-ios.sh --release --brand YOUR_BRAND
+```
+
+#### 4. GitHub Actions 自动构建
+
+项目包含 GitHub Actions 工作流 (`.github/workflows/build.yml`)：
+
+1. 进入你的 GitHub 仓库 → Actions → Build All Platforms
+2. 点击 "Run workflow"
+3. 选择品牌 ID 和构建类型
+4. 等待构建完成，下载 Artifacts
 
 ### 输出位置
 
@@ -248,5 +275,5 @@ adb logcat -s JinGo:V SuperRay-JNI:V
 ---
 
 **版本**: 1.0.0
-**Qt 版本**: 6.10.0+
-**最后更新**: 2025-01
+**Qt 版本**: 6.5+ (推荐 6.8.1 LTS)
+**最后更新**: 2026-01

@@ -73,7 +73,10 @@ function Get-QtVersion {
 }
 
 function Get-QtDir {
-    # 优先使用环境变量
+    # 优先使用环境变量 (GitHub Actions 使用 Qt6_DIR)
+    if ($env:Qt6_DIR -and (Test-Path $env:Qt6_DIR)) {
+        return $env:Qt6_DIR
+    }
     if ($env:QT_DIR -and (Test-Path $env:QT_DIR)) {
         return $env:QT_DIR
     }

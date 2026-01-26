@@ -18,21 +18,45 @@ set -e  # 遇到错误立即退出
 # ██╔═══╝  ██║     ██╔══██║   ██║   ██╔══╝  ██║   ██║██╔══██╗██║╚██╔╝██║
 # ██║      ███████╗██║  ██║   ██║   ██║     ╚██████╔╝██║  ██║██║ ╚═╝ ██║
 # ╚═╝      ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝
-#                    平台配置 - 修改这里的值来调整构建设置
+#              用户配置 - 修改下面的路径以匹配您的环境
 # ============================================================================
 
-# 加载环境配置
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [[ -f "$SCRIPT_DIR/../env.sh" ]]; then
-    source "$SCRIPT_DIR/../env.sh"
+# --------------------- Qt 路径配置 ---------------------
+# Qt 基础路径（包含 android_arm64_v8a 等子目录）
+# 优先使用环境变量 QT_BASE_PATH 或从 Qt6_DIR 推导，否则使用默认值
+# 本地开发请修改下面的默认路径，或设置环境变量
+# macOS 示例: "/Users/yourname/Qt/6.8.0"
+# Linux 示例: "/opt/Qt/6.8.0"
+if [[ -n "${QT_BASE_PATH:-}" ]]; then
+    : # 使用已设置的 QT_BASE_PATH
+elif [[ -n "${Qt6_DIR:-}" ]]; then
+    # Qt6_DIR 指向 android_arm64_v8a/lib/cmake/Qt6，取其父目录的父目录的父目录的父目录
+    QT_BASE_PATH="$(dirname "$(dirname "$(dirname "$(dirname "$Qt6_DIR")")")")"
+else
+    QT_BASE_PATH="/Volumes/mindata/Applications/Qt/6.10.0"
 fi
+
+# --------------------- Android SDK/NDK 配置 ---------------------
+# Android SDK 路径 (优先使用环境变量)
+if [[ -z "${ANDROID_SDK_ROOT:-}" ]]; then
+    ANDROID_SDK_ROOT="/Volumes/mindata/Library/Android/aarch64/sdk"
+fi
+# Android NDK 版本 (优先使用环境变量)
+if [[ -z "${ANDROID_NDK_VERSION:-}" ]]; then
+    ANDROID_NDK_VERSION="27.2.12479018"
+fi
+
+# --------------------- 脚本初始化 ---------------------
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 加载白标资源复制脚本
 if [[ -f "$SCRIPT_DIR/copy-brand-assets.sh" ]]; then
     source "$SCRIPT_DIR/copy-brand-assets.sh"
 fi
 
-# --------------------- Qt 配置 ---------------------
+# --------------------- 派生配置 (一般不需要修改) ---------------------
+ANDROID_NDK="$ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION"
+
 # 检测当前操作系统
 detect_os() {
     case "$(uname -s)" in
@@ -44,79 +68,10 @@ detect_os() {
 
 CURRENT_OS="$(detect_os)"
 
-# 自动检测 Qt 版本和路径
-auto_detect_qt_base() {
-    # 使用 env.sh 检测的路径
-    if [[ -n "$JINGO_QT_BASE" ]] && [[ -n "$JINGO_QT_VERSION" ]]; then
-        echo "$JINGO_QT_BASE/$JINGO_QT_VERSION"
-        return 0
-    fi
-
-    # 根据操作系统选择搜索路径
-    local search_paths=()
-
-    if [[ "$CURRENT_OS" == "macos" ]]; then
-        search_paths=(
-            # macOS 开发环境
-            "/Volumes/mindata/Applications/Qt/6.10.0"
-            "/Volumes/mindata/Applications/Qt/6.10.1"
-            # macOS 打包环境
-            "/Volumes/mindata/Qt/6.10.0"
-            "/Volumes/mindata/Qt/6.10.1"
-        )
-    elif [[ "$CURRENT_OS" == "linux" ]]; then
-        search_paths=(
-            # Linux 开发环境
-            "/mnt/develop/Qt/6.10.0"
-            "/mnt/develop/Qt/6.10.1"
-            # Linux 打包环境
-            "/mnt/dev/Qt/6.10.0"
-            "/mnt/dev/Qt/6.10.1"
-        )
-    fi
-
-    # 通用路径
-    search_paths+=(
-        "/opt/Qt/6.10.0"
-        "/opt/Qt/6.10.1"
-        "$HOME/Qt/6.10.0"
-        "$HOME/Qt/6.10.1"
-    )
-
-    for path in "${search_paths[@]}"; do
-        if [[ -d "$path/android_arm64_v8a" ]]; then
-            echo "$path"
-            return 0
-        fi
-    done
-
-    # 通配符搜索最新版本
-    local base_paths=()
-    if [[ "$CURRENT_OS" == "macos" ]]; then
-        base_paths=("/Volumes/mindata/Applications/Qt" "/Volumes/mindata/Qt")
-    elif [[ "$CURRENT_OS" == "linux" ]]; then
-        base_paths=("/mnt/develop/Qt" "/mnt/dev/Qt")
-    fi
-    base_paths+=("/opt/Qt" "$HOME/Qt")
-
-    for base in "${base_paths[@]}"; do
-        if [[ -d "$base" ]]; then
-            for ver_path in $(ls -d "$base"/*/ 2>/dev/null | sort -V -r); do
-                if [[ -d "$ver_path/android_arm64_v8a" ]]; then
-                    echo "${ver_path%/}"
-                    return 0
-                fi
-            done
-        fi
-    done
-
-    return 1
-}
-
 # 获取 Qt 版本号
 get_qt_version() {
-    if [[ -n "$JINGO_QT_VERSION" ]]; then
-        echo "$JINGO_QT_VERSION"
+    if [[ -n "$QT_BASE_PATH" ]]; then
+        basename "$QT_BASE_PATH"
     else
         echo "6.10.0"
     fi

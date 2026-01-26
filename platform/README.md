@@ -72,7 +72,7 @@ platform/
 platform/android/keystore/jingo-release.keystore
 
 # 使用签名脚本进行签名
-./scripts/signing/setup_android_signing.sh sign-apk <apk文件>
+./scripts/signing/post_build_android.sh --sign <apk文件>
 ```
 
 ### 资源说明

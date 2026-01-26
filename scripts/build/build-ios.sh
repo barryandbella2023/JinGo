@@ -18,102 +18,50 @@ set -e  # 遇到错误立即退出
 # ██╔═══╝  ██║     ██╔══██║   ██║   ██╔══╝  ██║   ██║██╔══██╗██║╚██╔╝██║
 # ██║      ███████╗██║  ██║   ██║   ██║     ╚██████╔╝██║  ██║██║ ╚═╝ ██║
 # ╚═╝      ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝
-#                    平台配置 - 修改这里的值来调整构建设置
+#              用户配置 - 修改下面的路径以匹配您的环境
 # ============================================================================
 
-# 加载环境配置
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [[ -f "$SCRIPT_DIR/../env.sh" ]]; then
-    source "$SCRIPT_DIR/../env.sh"
+# --------------------- Qt 路径配置 ---------------------
+# Qt iOS 安装路径
+# 优先使用环境变量 QT_IOS_PATH 或 Qt6_DIR，否则使用默认值
+# 本地开发请修改下面的默认路径，或设置环境变量
+# 示例: "/Users/yourname/Qt/6.8.0/ios"
+if [[ -n "${QT_IOS_PATH:-}" ]]; then
+    : # 使用已设置的 QT_IOS_PATH
+elif [[ -n "${Qt6_DIR:-}" ]]; then
+    QT_IOS_PATH="$Qt6_DIR"
+else
+    QT_IOS_PATH="/Volumes/mindata/Applications/Qt/6.10.0/ios"
 fi
+
+# --------------------- Apple 开发者配置 ---------------------
+# 开发团队 ID
+TEAM_ID="6HP2RFA5AK"
+# 签名身份: "Apple Development" (开发) 或 "Apple Distribution" (发布)
+CODE_SIGN_IDENTITY="Apple Development"
+
+# --------------------- Provisioning Profile 名称 ---------------------
+PROFILE_MAIN="JinGo Accelerator iOS"
+PROFILE_PACKET_TUNNEL="JinGo PacketTunnel iOS"
+
+# --------------------- 测试设备配置 ---------------------
+# 默认测试设备 UDID (用于 --install 选项)
+DEFAULT_DEVICE_UDID="00008030-001238903A90802E"
+
+# --------------------- 脚本初始化 ---------------------
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 加载白标资源复制脚本
 if [[ -f "$SCRIPT_DIR/copy-brand-assets.sh" ]]; then
     source "$SCRIPT_DIR/copy-brand-assets.sh"
 fi
 
-# --------------------- Qt 配置 ---------------------
-# Qt iOS 安装路径 (自动检测，可通过环境变量 QT_IOS_PATH 覆盖)
-auto_detect_qt_ios() {
-    # 优先使用环境变量
-    if [[ -n "$QT_IOS_PATH" ]] && [[ -d "$QT_IOS_PATH" ]]; then
-        echo "$QT_IOS_PATH"
-        return 0
-    fi
-
-    # 使用 env.sh 检测的路径
-    if [[ -n "$JINGO_QT_BASE" ]] && [[ -n "$JINGO_QT_VERSION" ]]; then
-        local qt_path="$JINGO_QT_BASE/$JINGO_QT_VERSION/ios"
-        if [[ -d "$qt_path" ]]; then
-            echo "$qt_path"
-            return 0
-        fi
-    fi
-
-    # 搜索常见路径
-    local search_paths=(
-        # 开发环境
-        "/Volumes/mindata/Applications/Qt/6.10.0/ios"
-        "/Volumes/mindata/Applications/Qt/6.10.1/ios"
-        # 打包环境
-        "/Volumes/mindata/Qt/6.10.0/ios"
-        "/Volumes/mindata/Qt/6.10.1/ios"
-        # 其他常见路径
-        "/opt/Qt/6.10.0/ios"
-        "/opt/Qt/6.10.1/ios"
-        "$HOME/Qt/6.10.0/ios"
-        "$HOME/Qt/6.10.1/ios"
-    )
-
-    for path in "${search_paths[@]}"; do
-        if [[ -d "$path" ]]; then
-            echo "$path"
-            return 0
-        fi
-    done
-
-    # 通配符搜索最新版本
-    for base in "/Volumes/mindata/Applications/Qt" "/Volumes/mindata/Qt" "/opt/Qt" "$HOME/Qt"; do
-        if [[ -d "$base" ]]; then
-            local latest=$(ls -d "$base"/*/ios 2>/dev/null | sort -V | tail -1)
-            if [[ -d "$latest" ]]; then
-                echo "$latest"
-                return 0
-            fi
-        fi
-    done
-
-    return 1
-}
-
-QT_IOS_PATH="${QT_IOS_PATH:-$(auto_detect_qt_ios)}"
-
 # --------------------- iOS 配置 ---------------------
 # 最低 iOS 版本
 IOS_DEPLOYMENT_TARGET="14.0"
 
-# --------------------- Apple 开发者配置 ---------------------
-# 开发团队 ID (可通过环境变量 APPLE_DEVELOPMENT_TEAM 覆盖)
-TEAM_ID="${APPLE_DEVELOPMENT_TEAM:-****}"
-
-# 签名身份 (可通过环境变量 APPLE_CODE_SIGN_IDENTITY 覆盖)
-# 本地开发用 "Apple Development"，CI 发布用 "Apple Distribution"
-CODE_SIGN_IDENTITY="${APPLE_CODE_SIGN_IDENTITY:-Apple Development}"
-
-# --------------------- Provisioning Profile 名称 ---------------------
-# 可通过环境变量或 --profile-* 参数覆盖
-# 主应用 Profile
-PROFILE_MAIN="${IOS_PROFILE_MAIN:-JinGo Accelerator iOS}"
-# PacketTunnelProvider Extension Profile
-PROFILE_PACKET_TUNNEL="${IOS_PROFILE_PACKET_TUNNEL:-JinGo PacketTunnel iOS}"
-
-# --------------------- 测试设备配置 ---------------------
-# 默认测试设备 UDID (用于 --install 选项)
-DEFAULT_DEVICE_UDID="00008030-001238903A90802E"
-
 # --------------------- 应用信息 ---------------------
 APP_NAME="JinGo"
-# Bundle ID 默认值 (可通过环境变量 APP_BUNDLE_ID 或 --bundle-id 参数覆盖)
 APP_BUNDLE_ID="${APP_BUNDLE_ID:-work.opine.jingo}"
 
 # ============================================================================

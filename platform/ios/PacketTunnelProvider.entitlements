@@ -4,11 +4,11 @@
 <dict>
 	<!-- Application Identifier -->
 	<key>application-identifier</key>
-	<string>****.work.opine.jingo.PacketTunnelProvider</string>
+	<string>6HP2RFA5AK.work.opine.jingo.PacketTunnelProvider</string>
 
 	<!-- Team Identifier -->
 	<key>com.apple.developer.team-identifier</key>
-	<string>****</string>
+	<string>6HP2RFA5AK</string>
 
 	<!-- Network Extension 权限 (PacketTunnelProvider) -->
 	<key>com.apple.developer.networking.networkextension</key>
@@ -38,7 +38,7 @@
 	<!-- Keychain Access Groups - 用于安全存储 -->
 	<key>keychain-access-groups</key>
 	<array>
-		<string>****.*</string>
+		<string>6HP2RFA5AK.*</string>
 		<string>com.apple.token</string>
 	</array>
 

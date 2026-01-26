@@ -475,42 +475,7 @@ int main(int argc, char *argv[])
     QQmlContext *rootContext = engine.rootContext();
 
     if (rootContext) {
-        // ========================================================================
-        // 【安全检查】验证 BundleConfig 签名完整性
-        // 如果配置文件被篡改，显示错误并强制退出
-        // ========================================================================
-        BundleConfig& bundleConfig = BundleConfig::instance();
-        if (bundleConfig.isTampered()) {
-            LOG_ERROR("[SECURITY] BundleConfig signature verification failed - possible tampering detected!");
-            LOG_ERROR("[SECURITY] Application will terminate for security reasons.");
-
-            QString errorTitle = QObject::tr("安全错误");
-            QString errorMessage = QObject::tr(
-                "配置文件签名验证失败，可能已被篡改。\n\n"
-                "请重新安装应用或联系技术支持。\n\n"
-                "Security Error: Configuration signature verification failed."
-            );
-
-#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
-            // 移动平台：使用 QML 对话框（稍后在 QML 中处理）
-            // 这里先记录错误，让 QML 层处理显示
-            qCritical() << "[SECURITY] Config tampered - forcing exit";
-#else
-            // 桌面平台：使用原生消息框
-            QMessageBox::critical(nullptr, errorTitle, errorMessage);
-#endif
-            // 强制退出应用程序
-            LOG_ERROR("[SECURITY] Forcing application exit due to config tampering");
-            QCoreApplication::exit(1);
-            return 1;
-        }
-
-        // 配置验证通过，继续启动
-        if (bundleConfig.isSigned() && bundleConfig.isSignatureValid()) {
-            LOG_INFO("[SECURITY] BundleConfig signature verified successfully");
-        } else if (!bundleConfig.isSigned()) {
-            LOG_WARNING("[SECURITY] BundleConfig is not signed (development mode)");
-        }
+        // 注意: BundleConfig 签名验证已禁用，直接使用实例
 
         // ========================================================================
         // 【关键修复】Android SecureStorage 必须在创建 ViewModels 之前初始化

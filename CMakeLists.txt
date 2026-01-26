@@ -86,7 +86,7 @@ message(STATUS "✓ Code Sign Identity: ${APPLE_CODE_SIGN_IDENTITY}")
 
 # 开发团队 ID (从证书中提取)
 if(NOT APPLE_DEVELOPMENT_TEAM)
-    set(APPLE_DEVELOPMENT_TEAM "****" CACHE STRING "Apple Development Team ID")
+    set(APPLE_DEVELOPMENT_TEAM "6HP2RFA5AK" CACHE STRING "Apple Development Team ID")
 endif()
 message(STATUS "✓ Development Team: ${APPLE_DEVELOPMENT_TEAM}")
 
