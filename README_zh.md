@@ -4,6 +4,8 @@
 
 跨平台 VPN 客户端，基于 Qt 6 和 Xray 核心构建。
 
+**官方演示站点**: [https://jingoo.biz](https://jingoo.biz)
+
 ## 特性
 
 - **跨平台支持**: Android、iOS、macOS、Windows、Linux
@@ -48,7 +50,7 @@
 - **编译器**:
   - macOS/iOS: Xcode 15+
   - Android: NDK 27.2+
-  - Windows: MinGW 13+ 或 Visual Studio 2022
+  - Windows: MinGW 13+（Qt 自带）
   - Linux: GCC 11+ 或 Clang 14+
 
 ### 编译步骤

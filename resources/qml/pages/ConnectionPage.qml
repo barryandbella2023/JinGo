@@ -463,7 +463,7 @@ Rectangle {
                             MouseArea {
                                 id: mobileConnectBtnArea
                                 anchors.fill: parent
-                                enabled: isAuthenticated && !isConnecting && !isDisconnecting && (!subscriptionManager || !subscriptionManager.isUpdating)
+                                enabled: isAuthenticated && !isConnecting && !isDisconnecting && (!serverListViewModel || !serverListViewModel.isRefreshingServers)
                                 cursorShape: enabled ? Qt.PointingHandCursor : Qt.ForbiddenCursor
                                 onClicked: {
                                     if (!vpnManager) return
@@ -656,7 +656,7 @@ Rectangle {
                             MouseArea {
                                 id: connectButtonMouseArea
                                 anchors.fill: parent
-                                enabled: isAuthenticated && !isConnecting && !isDisconnecting && (!subscriptionManager || !subscriptionManager.isUpdating)
+                                enabled: isAuthenticated && !isConnecting && !isDisconnecting && (!subscriptionManager || !subscriptionManager.isRefreshingServers)
                                 cursorShape: enabled ? Qt.PointingHandCursor : Qt.ForbiddenCursor
 
                                 onClicked: {

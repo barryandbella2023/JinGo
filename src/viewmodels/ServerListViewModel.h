@@ -14,6 +14,7 @@
 #include <QString>
 #include <QPointer>
 #include "models/Server.h"
+#include "ServerListModel.h"
 
 class SubscriptionManager;
 class VPNManager;
@@ -32,8 +33,11 @@ class ServerListViewModel : public QObject
 {
     Q_OBJECT
 
-    /// 过滤后的服务器列表（只读，返回副本）
+    /// 过滤后的服务器列表（只读，返回副本）- 兼容旧接口
     Q_PROPERTY(QList<Server*> servers READ servers NOTIFY serversChanged)
+
+    /// 服务器列表模型（推荐使用，支持增量更新）
+    Q_PROPERTY(ServerListModel* serverModel READ serverModel CONSTANT)
 
     /// 当前选中的服务器（可读写，使用QPointer安全持有）
     Q_PROPERTY(Server* selectedServer READ selectedServer WRITE selectServer NOTIFY selectedServerChanged)
@@ -59,6 +63,9 @@ class ServerListViewModel : public QObject
     /// 速度测试结果（serverId -> {ip, speed, asn, isp, country}）
     Q_PROPERTY(QVariantMap speedTestResults READ speedTestResults NOTIFY speedTestResultsChanged)
 
+    /// 是否正在刷新服务器列表（用于禁用连接按钮）
+    Q_PROPERTY(bool isRefreshingServers READ isRefreshingServers NOTIFY isRefreshingServersChanged)
+
 public:
     /**
      * @brief 构造函数
@@ -67,21 +74,19 @@ public:
     explicit ServerListViewModel(QObject* parent = nullptr);
 
     /**
-     * @brief 获取过滤后的服务器列表（返回副本）
+     * @brief 获取过滤后的服务器列表（返回副本）- 兼容旧接口
      * @return 服务器指针列表的副本，所有空指针已被过滤
+     * @deprecated 推荐使用 serverModel() 获取增量更新的模型
      */
     QList<Server*> servers() const {
-        // 返回副本，并过滤掉空指针和已删除的对象
-        // QPointer 会在对象被删除时自动变为 null，所以这里很安全
-        QList<Server*> validServers;
-        for (const QPointer<Server>& serverPtr : m_filteredServers) {
-            // QPointer 在对象被删除后会自动变为 null
-            if (!serverPtr.isNull()) {
-                validServers.append(serverPtr.data());
-            }
-        }
-        return validServers;
+        return m_serverModel->servers();
     }
+
+    /**
+     * @brief 获取服务器列表模型（推荐）
+     * @return ServerListModel 指针，支持增量更新
+     */
+    ServerListModel* serverModel() const { return m_serverModel; }
 
     /**
      * @brief 获取当前选中的服务器
@@ -130,6 +135,12 @@ public:
      * @return 测速结果映射 {serverId -> {ip, speed, asn, isp, country}}
      */
     QVariantMap speedTestResults() const { return m_speedTestResults; }
+
+    /**
+     * @brief 获取服务器列表刷新状态
+     * @return true表示正在刷新，false表示刷新完成
+     */
+    bool isRefreshingServers() const { return m_isRefreshingServers; }
 
     /**
      * @brief 设置筛选文本
@@ -214,6 +225,12 @@ public slots:
     void loadServersFromDatabase();
 
     /**
+     * @brief 标记服务器列表刷新完成
+     * @details 由QML在处理完serversChanged信号后调用，用于恢复连接按钮状态
+     */
+    Q_INVOKABLE void finishRefreshingServers();
+
+    /**
      * @brief 设置服务器的速度测试结果
      * @param serverId 服务器ID
      * @param result 测试结果 {ip, speed, asn, isp, country}
@@ -284,6 +301,11 @@ signals:
     void isLoadingChanged();
 
     /**
+     * @brief 服务器列表刷新状态变化信号
+     */
+    void isRefreshingServersChanged();
+
+    /**
      * @brief 服务器测试完成信号
      * @param server 已测试的服务器指针
      */
@@ -339,6 +361,7 @@ private:
      */
     void handleBatchTestProgress();
 
+    ServerListModel* m_serverModel;                ///< 服务器列表模型（增量更新）
     QList<QPointer<Server>> m_allServers;          ///< 所有服务器列表（使用QPointer防止悬挂指针）
     QList<QPointer<Server>> m_filteredServers;     ///< 过滤后的服务器列表（使用QPointer防止悬挂指针）
     QPointer<Server> m_selectedServer;     ///< 当前选中的服务器（使用QPointer安全持有）
@@ -346,6 +369,7 @@ private:
     bool m_isLoading;                      ///< 是否正在加载
     bool m_isUpdating;                     ///< 是否正在更新（防重入）
     bool m_isBatchTesting;                 ///< 是否正在批量测试
+    bool m_isRefreshingServers = false;    ///< 是否正在刷新服务器列表（用于禁用连接按钮）
     int m_totalTestCount;                  ///< 总测试数量
     int m_completedTestCount;              ///< 已完成测试数量
     QString m_testingProgressText;         ///< 测试进度文本

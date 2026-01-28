@@ -316,7 +316,6 @@ Rectangle {
 
                 // ========== 订阅设置 ==========
                 SettingsGroup {
-                    visible: !bundleConfig || !bundleConfig.hideSubscriptionBlock
                     title: qsTr("Subscription Settings")
                     description: qsTr("Server subscription update settings")
 

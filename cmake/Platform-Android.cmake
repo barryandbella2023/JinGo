@@ -85,15 +85,9 @@ message(STATUS "Qt Android Path: ${CMAKE_PREFIX_PATH}")
 # ============================================================================
 # Android Platform Sources
 # ============================================================================
+# Note: When using JinDoCore static library, platform sources are already
+# compiled into the library. No additional source files needed here.
 
-set(PLATFORM_SOURCES
-    src/platform/PlatformInterface.cpp
-    src/platform/AndroidPlatform.cpp
-    src/platform/AndroidVpnHelper.cpp
-    src/platform/AndroidStatusBarManager.cpp
-)
+set(PLATFORM_SOURCES "")
 
-message(STATUS "Android platform sources configured:")
-foreach(source ${PLATFORM_SOURCES})
-    message(STATUS "  - ${source}")
-endforeach()
+message(STATUS "Android platform: Using JinDoCore static library (no additional sources needed)")

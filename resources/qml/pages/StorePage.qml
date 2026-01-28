@@ -609,7 +609,7 @@ Rectangle {
             color: Theme.colors.surface
             border.width: 1
             border.color: Theme.colors.border
-            visible: authManager && authManager.isAuthenticated && (!bundleConfig || !bundleConfig.hideSubscriptionBlock)
+            visible: authManager && authManager.isAuthenticated
 
             ColumnLayout {
                 id: subscribeInfoColumn
@@ -634,11 +634,11 @@ Rectangle {
                     Item { Layout.fillWidth: true }
                 }
 
-                // 订阅链接部分
+                // 订阅链接部分（可配置隐藏）
                 ColumnLayout {
                     Layout.fillWidth: true
                     spacing: Theme.spacing.sm
-                    visible: subscribeData && subscribeData.subscribe_url
+                    visible: subscribeData && subscribeData.subscribe_url && (!bundleConfig || !bundleConfig.hideSubscriptionBlock)
 
                     Label {
                         text: qsTr("Subscription link")

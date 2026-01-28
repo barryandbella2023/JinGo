@@ -40,16 +40,11 @@ set(PLATFORM_NAME "Linux")
 # Linux Source Files
 # ============================================================================
 
-set(PLATFORM_SOURCES
-    src/platform/PlatformInterface.cpp
-    src/platform/LinuxPlatform.cpp
-    src/platform/linux/LinuxTunManager.cpp
-)
+# 平台相关源文件已经在 JinDo 核心库中，不需要在这里编译
+# JinGo 只需要链接 JinDo 静态库即可
+set(PLATFORM_SOURCES)
 
-message(STATUS "Linux source files configured:")
-foreach(source ${PLATFORM_SOURCES})
-    message(STATUS "  - ${source}")
-endforeach()
+message(STATUS "Linux platform code is provided by JinDoCore library")
 
 # ============================================================================
 # Linux System Libraries - libsecret for Secure Storage

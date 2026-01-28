@@ -29,6 +29,7 @@
 
 class VPNCore;        ///< VPN核心（包装XrayCBridge）
 class ConfigManager;  ///< 配置管理器
+class IServerProvider; ///< 服务器提供者接口
 // TUN设备现在由SuperRay在Network Extension内部处理
 // 桌面平台(Windows/Linux)将使用SuperRay的TUN接口
 class PlatformInterface;  ///< 平台相关接口
@@ -507,6 +508,26 @@ public:
      * @note 仅在TUN模式下有效
      */
     QString tunDeviceName() const;
+
+    // ========================================================================
+    // 服务器提供者接口
+    // ========================================================================
+
+    /**
+     * @brief 设置服务器提供者
+     * @param provider 服务器提供者接口指针
+     *
+     * @details
+     * 通过依赖注入的方式设置服务器提供者，用于解耦VPNManager对具体实现的依赖。
+     * 服务器提供者用于恢复上次选择的服务器、获取服务器列表等操作。
+     */
+    void setServerProvider(IServerProvider* provider);
+
+    /**
+     * @brief 获取服务器提供者
+     * @return IServerProvider* 服务器提供者接口指针
+     */
+    IServerProvider* serverProvider() const;
 
     // ========================================================================
     // 系统诊断方法
@@ -1352,6 +1373,7 @@ private:
     VPNCore& m_vpnCore;                      ///< VPN核心引擎（包装XrayCBridge）
     ConfigManager& m_configManager;          ///< 配置管理器引用
     PlatformInterface* m_platformInterface;  ///< 平台接口指针
+    IServerProvider* m_serverProvider;       ///< 服务器提供者接口（用于恢复上次选择的服务器）
 
 #if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
     NetworkExtensionManager* m_networkExtensionManager;  ///< Network Extension管理器（macOS/iOS TUN模式）

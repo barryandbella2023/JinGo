@@ -44,21 +44,19 @@ Rectangle {
         id: serversModel
     }
 
-    // 安全地从 C++ 加载服务器列表到 ListModel
+    // 安全地从 C++ 加载服务器列表到 ListModel（增量更新模式）
     // forceClear: 是否强制清空（仅在用户手动刷新时为true）
     function loadServersToModel(forceClear) {
         if (!serverListViewModel) {
             return
         }
 
-        // 【关键修复】如果正在加载，不要访问服务器列表
-        // C++ 端正在清理旧对象和加载新对象，访问会导致崩溃
+        // 如果正在加载，不要访问服务器列表
         if (serverListViewModel.isLoading) {
             return
         }
 
-        // 【后台更新检查】如果后台正在更新数据，跳过本次加载
-        // 等待后台更新完成后会通过信号通知 UI 刷新
+        // 后台更新检查
         if (typeof backgroundDataUpdater !== 'undefined' && backgroundDataUpdater && backgroundDataUpdater.isUpdating) {
             return
         }
@@ -71,32 +69,21 @@ Rectangle {
             return
         }
 
-        // 检查列表有效性
         if (!servers || typeof servers.length === 'undefined') {
             return
         }
 
-        // 【核心修复】先提取所有新数据到临时数组
-        // 只有提取成功后，才一次性替换模型（原子操作）
+        // 第一步：提取新数据到临时数组，并建立 ID 映射
         var newServers = []
+        var newServerIds = {}  // ID -> index 映射
 
         for (var i = 0; i < servers.length; i++) {
             var server = servers[i]
+            if (!server) continue
 
-            // 【关键修复】严格的对象有效性检查
-            // 检查对象是否为null，以及是否还有效（未被C++删除）
-            if (!server) {
-                continue
-            }
-
-            // 立即提取所有数据到 plain JS object，不保留 C++ 对象引用
             try {
-                // 【新增】先尝试访问一个简单属性，如果对象已被删除会立即失败
-                // 这样可以避免在访问多个属性时中途崩溃
                 var testAccess = server.id
-                if (testAccess === undefined || testAccess === null) {
-                    continue
-                }
+                if (testAccess === undefined || testAccess === null) continue
 
                 var serverData = {
                     "serverId": server.id || "",
@@ -116,37 +103,84 @@ Rectangle {
                     "isTestingSpeed": server.isTestingSpeed || false
                 }
 
-                // 只添加有效ID的服务器
                 if (serverData.serverId && serverData.serverId !== "") {
+                    newServerIds[serverData.serverId] = newServers.length
                     newServers.push(serverData)
                 }
             } catch (e) {
-                // 如果访问对象属性时崩溃（对象已被删除），跳过这个服务器
                 continue
             }
         }
 
-        // 【核心修复】只有在提取成功后，才更新模型
-        // forceClear=true: 用户刷新，清空并重建
-        // forceClear=false: 排序/筛选，直接重建（不清空，减少闪烁）
+        // 强制清空模式：直接替换
         if (forceClear) {
-            serversModel.clear()
-        }
-
-        // 如果是非强制清空模式，且新数据与旧数据数量相同，做智能更新
-        if (!forceClear && serversModel.count === newServers.length) {
-            // 逐项更新，避免完全重建
-            for (var j = 0; j < newServers.length; j++) {
-                serversModel.set(j, newServers[j])
-            }
-        } else {
-            // 否则清空并重建
             serversModel.clear()
             for (var k = 0; k < newServers.length; k++) {
                 serversModel.append(newServers[k])
             }
+            return
         }
 
+        // ========== 增量更新模式 ==========
+        // 建立旧列表的 ID 映射
+        var oldServerIds = {}  // ID -> index 映射
+        for (var m = 0; m < serversModel.count; m++) {
+            var oldItem = serversModel.get(m)
+            if (oldItem && oldItem.serverId) {
+                oldServerIds[oldItem.serverId] = m
+            }
+        }
+
+        // 第二步：删除不在新列表中的项（从后往前删除，避免索引偏移）
+        for (var d = serversModel.count - 1; d >= 0; d--) {
+            var item = serversModel.get(d)
+            if (item && item.serverId && !(item.serverId in newServerIds)) {
+                serversModel.remove(d)
+            }
+        }
+
+        // 第三步：更新已存在的项，添加新项
+        // 先处理更新，再处理添加，保持顺序
+        var processedIds = {}
+
+        // 按新列表顺序遍历
+        for (var n = 0; n < newServers.length; n++) {
+            var newItem = newServers[n]
+            var existingIndex = -1
+
+            // 在当前模型中查找这个ID
+            for (var f = 0; f < serversModel.count; f++) {
+                var checkItem = serversModel.get(f)
+                if (checkItem && checkItem.serverId === newItem.serverId) {
+                    existingIndex = f
+                    break
+                }
+            }
+
+            if (existingIndex >= 0) {
+                // 已存在：检查是否需要更新属性
+                var oldData = serversModel.get(existingIndex)
+                if (hasServerDataChanged(oldData, newItem)) {
+                    serversModel.set(existingIndex, newItem)
+                }
+                processedIds[newItem.serverId] = true
+            } else {
+                // 新服务器：添加到列表末尾
+                serversModel.append(newItem)
+                processedIds[newItem.serverId] = true
+            }
+        }
+    }
+
+    // 检查服务器数据是否有变化
+    function hasServerDataChanged(oldData, newData) {
+        if (!oldData || !newData) return true
+        return oldData.serverName !== newData.serverName ||
+               oldData.serverLatency !== newData.serverLatency ||
+               oldData.serverLocation !== newData.serverLocation ||
+               oldData.serverProtocol !== newData.serverProtocol ||
+               oldData.isTestingSpeed !== newData.isTestingSpeed ||
+               oldData.isFavorite !== newData.isFavorite
     }
 
     // 根据 ID 安全地从 C++ 获取服务器对象（用于操作，不用于显示）
@@ -338,6 +372,11 @@ Rectangle {
 
             // 然后进行分组
             groupServersByCountry()
+
+            // 通知C++层服务器列表刷新完成，恢复连接按钮状态
+            if (serverListViewModel) {
+                serverListViewModel.finishRefreshingServers()
+            }
         }
 
         function onIsLoadingChanged() {

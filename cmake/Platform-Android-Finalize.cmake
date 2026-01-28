@@ -251,14 +251,10 @@ message(STATUS "========================================")
 
 # SuperRay JNI库 - 统一的TUN和Xray处理
 # 注意: 库名为 "superray" 以便 Kotlin 通过 System.loadLibrary("superray") 加载
-# 当使用 JinDoCore 静态库时，JNI 源文件也从 JinDo 项目获取
-if(USE_JINDO_LIB AND EXISTS "${JINDO_ROOT}/src/platform/android/cpp/tun2socks_jni.cpp")
-    set(SUPERRAY_JNI_SOURCE "${JINDO_ROOT}/src/platform/android/cpp/tun2socks_jni.cpp")
-    message(STATUS "Using JNI source from JinDo: ${SUPERRAY_JNI_SOURCE}")
-else()
-    set(SUPERRAY_JNI_SOURCE "src/platform/android/cpp/tun2socks_jni.cpp")
-    message(STATUS "Using JNI source from JinGo: ${SUPERRAY_JNI_SOURCE}")
-endif()
+# JNI 源文件从 JinDoCore 导出的 jni/ 目录获取
+set(JINDO_JNI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/jindo/android/jni")
+set(SUPERRAY_JNI_SOURCE "${JINDO_JNI_DIR}/tun2socks_jni.cpp")
+message(STATUS "Using JNI source from JinDoCore: ${SUPERRAY_JNI_SOURCE}")
 
 add_library(superray SHARED
     ${SUPERRAY_JNI_SOURCE}

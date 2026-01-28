@@ -90,6 +90,7 @@ set(JINDO_THIRD_PARTY "${CMAKE_CURRENT_SOURCE_DIR}/third_party/jindo")
 
 if(TARGET_ANDROID)
     set(JINDO_LIB_DIR "${JINDO_THIRD_PARTY}/android/${CMAKE_ANDROID_ARCH_ABI}")
+    set(JINDO_INCLUDE_DIR "${JINDO_THIRD_PARTY}/android/include")
 elseif(TARGET_IOS OR TARGET_MACOS)
     set(JINDO_XCFRAMEWORK "${JINDO_THIRD_PARTY}/apple/JinDoCore.xcframework")
     if(TARGET_IOS)
@@ -149,11 +150,8 @@ set(PANEL_SOURCES
     src/panel/V2BoardProvider.h
 )
 
-# JinGo 独有模型（QML 绑定）
-set(MODEL_SOURCES
-    src/models/SubscriptionListModel.cpp
-    src/models/SubscriptionListModel.h
-)
+# JinGo 独有模型（QML 绑定）- 已移至 viewmodels
+set(MODEL_SOURCES)
 
 # ViewModels（UI 层）- 必须包含头文件以便 AUTOMOC 处理
 set(VIEWMODEL_SOURCES
@@ -163,10 +161,14 @@ set(VIEWMODEL_SOURCES
     src/viewmodels/RegisterViewModel.h
     src/viewmodels/ServerListViewModel.cpp
     src/viewmodels/ServerListViewModel.h
+    src/viewmodels/ServerListModel.cpp
+    src/viewmodels/ServerListModel.h
     src/viewmodels/ConnectionViewModel.cpp
     src/viewmodels/ConnectionViewModel.h
     src/viewmodels/SettingsViewModel.cpp
     src/viewmodels/SettingsViewModel.h
+    src/viewmodels/SubscriptionListModel.cpp
+    src/viewmodels/SubscriptionListModel.h
 )
 
 # UI 模块（仅桌面平台）
@@ -517,12 +519,12 @@ if(GEOIP_FILES)
             COMMENT "Copying GeoIP data files"
         )
     else()
+        # Linux 平台：复制到 dat 子目录
         add_custom_command(TARGET JinGo POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GEOIP_DAT_FILE} "${CMAKE_BINARY_DIR}/geoip.dat"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GEOSITE_DAT_FILE} "${CMAKE_BINARY_DIR}/geosite.dat"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GEOIP_DAT_FILE} "${CMAKE_BINARY_DIR}/bin/geoip.dat"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GEOSITE_DAT_FILE} "${CMAKE_BINARY_DIR}/bin/geosite.dat"
-            COMMENT "Copying GeoIP data files"
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin/dat"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GEOIP_DAT_FILE} "${CMAKE_BINARY_DIR}/bin/dat/geoip.dat"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GEOSITE_DAT_FILE} "${CMAKE_BINARY_DIR}/bin/dat/geosite.dat"
+            COMMENT "Copying GeoIP data files to dat/"
         )
     endif()
 endif()
@@ -784,11 +786,15 @@ if(WIN32)
 endif()
 
 # Linux: TUN permissions
+# 注意：不自动设置cap_net_admin，避免构建时要求sudo密码
+# 用户应手动执行：sudo setcap cap_net_admin+eip ./build-linux/bin/JinGo
 if(TARGET_LINUX)
+    # 检查权限但不自动设置
     add_custom_command(TARGET JinGo POST_BUILD
-        COMMAND bash -c "if command -v sudo >/dev/null 2>&1; then \
-            sudo setcap cap_net_admin+eip $<TARGET_FILE:JinGo> 2>/dev/null || true; fi"
-        COMMENT "Setting Linux TUN permissions"
+        COMMAND bash -c "echo ''; echo '==> Linux TUN 权限设置提示:'; \
+            echo '    如需使用 TUN 模式，请运行:'; \
+            echo '    sudo setcap cap_net_admin+eip $<TARGET_FILE:JinGo>'; echo ''"
+        COMMENT "Linux TUN permission info"
         VERBATIM
     )
 endif()

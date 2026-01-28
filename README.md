@@ -4,6 +4,8 @@
 
 Cross-platform VPN client built with Qt 6 and Xray core.
 
+**Official Demo**: [https://jingoo.biz](https://jingoo.biz)
+
 ## Features
 
 - **Cross-platform**: Android, iOS, macOS, Windows, Linux
@@ -48,7 +50,7 @@ Cross-platform VPN client built with Qt 6 and Xray core.
 - **Compiler**:
   - macOS/iOS: Xcode 15+
   - Android: NDK 27.2+
-  - Windows: MinGW 13+ or Visual Studio 2022
+  - Windows: MinGW 13+ (included with Qt)
   - Linux: GCC 11+ or Clang 14+
 
 ### Build Steps

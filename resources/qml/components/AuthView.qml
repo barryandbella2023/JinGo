@@ -112,8 +112,7 @@ ColumnLayout {
         }
     }
 
-    Component.onCompleted: {
-        // 初始化时强制加载登录表单，确保 StackView 状态一致
-        formStack.replace("qrc:/qml/components/LoginForm.qml")
-    }
+    // 注意：不需要在 Component.onCompleted 中调用 replace
+    // StackView 的 initialItem 已经正确加载了 LoginForm
+    // 重复调用 replace 会导致界面闪烁
 }

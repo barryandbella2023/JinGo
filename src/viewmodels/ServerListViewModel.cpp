@@ -7,6 +7,7 @@
  */
 
 #include "ServerListViewModel.h"
+#include "ServerListModel.h"
 #include "panel/SubscriptionManager.h"
 #include "core/VPNManager.h"
 #include "core/XrayCBridge.h"
@@ -58,6 +59,7 @@ extern "C" int Android_ProtectedTcpPing(const char* host, int port, int timeout_
  */
 ServerListViewModel::ServerListViewModel(QObject* parent)
     : QObject(parent)
+    , m_serverModel(new ServerListModel(this))  // 创建增量更新模型
     , m_selectedServer(nullptr)  // QPointer会自动初始化为nullptr
     , m_isLoading(false)
     , m_isUpdating(false)
@@ -67,6 +69,15 @@ ServerListViewModel::ServerListViewModel(QObject* parent)
     , m_subscriptionManager(&SubscriptionManager::instance())
     , m_vpnManager(&VPNManager::instance())
 {
+    // 连接模型的更新完成信号
+    connect(m_serverModel, &ServerListModel::updateCompleted,
+            this, [this](int added, int removed, int updated) {
+        Q_UNUSED(added);
+        Q_UNUSED(removed);
+        Q_UNUSED(updated);
+        // 通知 QML 服务器列表已更新（兼容旧接口）
+        emit serversChanged();
+    });
     // 初始加载 - 从本地数据库加载已有的服务器
     loadServersFromManager();
 
@@ -911,14 +922,14 @@ void ServerListViewModel::loadServersFromDatabase()
 /**
  * @brief 从订阅管理器加载服务器
  *
- * @details 加载流程：
+ * @details 加载流程（增量更新模式）：
  * 1. 检查是否已在更新中（防重入）
  * 2. 设置加载状态
- * 3. 使用QTimer异步从订阅管理器获取所有服务器，避免死锁
- * 4. 应用当前的筛选条件
- * 5. 发出serversChanged信号
+ * 3. 使用QTimer异步从订阅管理器获取所有服务器
+ * 4. 使用 ServerListModel::updateServers() 进行增量更新
+ * 5. 应用当前的筛选条件
  *
- * @note 使用m_isUpdating标志防止重复调用
+ * @note 使用 Server::id() 作为唯一标识符进行差异比较
  */
 void ServerListViewModel::loadServersFromManager()
 {
@@ -930,35 +941,37 @@ void ServerListViewModel::loadServersFromManager()
     m_isUpdating = true;
     setIsLoading(true);
 
-    // 【核心修复】不要立即清空列表，而是先获取新列表，然后原子性替换
-    // 这样可以避免QML在遍历过程中访问到已删除的对象
-    //
+    // 开始刷新服务器列表，通知UI禁用连接按钮
+    if (!m_isRefreshingServers) {
+        m_isRefreshingServers = true;
+        emit isRefreshingServersChanged();
+        LOG_DEBUG("Server list refresh started, connection button disabled");
+    }
+
     // 使用QTimer异步加载，避免在可能持有锁的情况下调用
     QTimer::singleShot(0, this, [this]() {
-        // 第一步：从 SubscriptionManager 获取所有服务器（新列表）
-        QList<QPointer<Server>> newServers;
+        // 第一步：从 SubscriptionManager 获取所有服务器
+        QList<Server*> newServers;
         if (m_subscriptionManager) {
-            // getAllServers() 返回列表副本，不是引用
-            QList<Server*> rawServers = m_subscriptionManager->getAllServers();
-
-            // 转换为 QPointer 并过滤空指针
-            for (Server* server : rawServers) {
-                if (server) {
-                    newServers.append(QPointer<Server>(server));
-                }
-            }
-
-            LOG_INFO(QString("Loaded %1 valid servers from SubscriptionManager").arg(newServers.count()));
+            newServers = m_subscriptionManager->getAllServers();
+            LOG_INFO(QString("Loaded %1 servers from SubscriptionManager").arg(newServers.count()));
         } else {
             LOG_ERROR("SubscriptionManager is null");
         }
 
-        // 第二步：原子性地替换服务器列表（使用副本赋值）
-        // Qt的QList赋值会创建副本，这样即使QML正在访问旧列表，也不会崩溃
-        // 使用 QPointer 后，当 Server 被删除时，QPointer 会自动变为 null
-        m_allServers = newServers;
+        // 第二步：使用增量更新模式更新模型
+        // ServerListModel 会比较新旧列表，只更新变化的部分
+        m_serverModel->updateServers(newServers);
 
-        // 第三步：应用过滤并通知 QML
+        // 第三步：同步更新旧的 m_allServers 列表（兼容旧代码）
+        m_allServers.clear();
+        for (Server* server : newServers) {
+            if (server) {
+                m_allServers.append(QPointer<Server>(server));
+            }
+        }
+
+        // 第四步：应用过滤（用于旧接口兼容）
         applyFilter();
 
         setIsLoading(false);
@@ -1126,4 +1139,17 @@ void ServerListViewModel::loadSpeedTestResults()
 
     LOG_INFO(QString("Loaded %1 cached speed test results").arg(m_speedTestResults.size()));
     emit speedTestResultsChanged();
+}
+
+/**
+ * @brief 标记服务器列表刷新完成
+ * @details 由QML在处理完serversChanged信号后调用，用于恢复连接按钮状态
+ */
+void ServerListViewModel::finishRefreshingServers()
+{
+    if (m_isRefreshingServers) {
+        m_isRefreshingServers = false;
+        emit isRefreshingServersChanged();
+        LOG_DEBUG("Server list refresh completed, connection button enabled");
+    }
 }

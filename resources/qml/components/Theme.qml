@@ -219,25 +219,9 @@ QtObject {
     // 默认使用浅色模式,Window 创建后会更新这个值
     property bool isDarkMode: false
 
-    // 【重要】直接初始化为浅色主题,避免绑定表达式在初始化时出现问题
-    // 这确保了 themeColors 一定有值,防止整个 Theme 对象初始化失败
-    property var themeColors: jingoTheme.light
-
-    // 当isDarkMode或currentTheme改变时更新themeColors
-    Component.onCompleted: {
-        // 初始化完成后建立绑定
-        themeColors = Qt.binding(function() {
-            return isDarkMode ? currentTheme.dark : currentTheme.light
-        })
-    }
-
-    onCurrentThemeChanged: {
-        themeColors = isDarkMode ? currentTheme.dark : currentTheme.light
-    }
-
-    onIsDarkModeChanged: {
-        themeColors = isDarkMode ? currentTheme.dark : currentTheme.light
-    }
+    // 【修复闪烁】直接使用绑定表达式，不在 Component.onCompleted 中重新绑定
+    // 这样避免了初始化后的额外变化导致的界面闪烁
+    property var themeColors: isDarkMode ? currentTheme.dark : currentTheme.light
 
     // 主色调
     readonly property QtObject colors: QtObject {
