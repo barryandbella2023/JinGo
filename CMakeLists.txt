@@ -82,7 +82,8 @@ endif()
 # Dependencies
 set(QT_NO_DISABLE_WARN_DUPLICATE_LIBRARIES ON)
 include(cmake/Dependencies-Qt.cmake)
-include(cmake/Dependencies-Xray.cmake)
+# SuperRay is statically merged into JinDoCore on all platforms except Windows
+# Windows: SuperRay DLL is shipped alongside JinDoCore in JINDO_LIB_DIR
 
 # JinDoCore static library configuration
 set(JINDO_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../JinDo" CACHE PATH "Path to JinDo project")
@@ -122,6 +123,15 @@ if(EXISTS "${JINDO_LIB_FILE}")
     message(STATUS "JinDoCore headers: ${JINDO_INCLUDE_DIR}")
     add_library(JinDoCore STATIC IMPORTED)
     set_target_properties(JinDoCore PROPERTIES IMPORTED_LOCATION "${JINDO_LIB_FILE}")
+
+    # Set interface link libraries for JinDoCore (Go/CGO needs resolv on Linux)
+    if(TARGET_LINUX)
+        # Add wrapper object file to provide __res_search symbol
+        set(RES_WRAPPER "${JINDO_LIB_DIR}/res_search_wrapper.o")
+        set_target_properties(JinDoCore PROPERTIES
+            INTERFACE_LINK_LIBRARIES "${RES_WRAPPER};-Wl,--push-state,--no-as-needed;resolv;c;-Wl,--pop-state;z"
+        )
+    endif()
 else()
     message(FATAL_ERROR "JinDoCore library not found: ${JINDO_LIB_FILE}")
 endif()
@@ -413,18 +423,15 @@ if(TARGET_MACOS)
         XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED NO
     )
 
-    set(SUPERRAY_MACOS_LIB "${CMAKE_CURRENT_SOURCE_DIR}/third_party/superray/apple/SuperRay.xcframework/macos-arm64_x86_64/libsuperray.a")
-    if(EXISTS "${SUPERRAY_MACOS_LIB}")
-        target_link_libraries(JinGoCore PRIVATE
-            "${SUPERRAY_MACOS_LIB}"
-            "-framework Foundation" "-framework CoreFoundation" "-framework Security"
-            "-framework SystemConfiguration" "-framework Network"
-            resolv
-        )
-        target_include_directories(JinGoCore PRIVATE
-            "${CMAKE_CURRENT_SOURCE_DIR}/third_party/superray/apple/SuperRay.xcframework/macos-arm64_x86_64/Headers"
-        )
-    endif()
+    target_link_libraries(JinGoCore PRIVATE
+        "${JINDO_LIB_FILE}"
+        "-framework Foundation" "-framework CoreFoundation" "-framework Security"
+        "-framework SystemConfiguration" "-framework Network"
+        "-lresolv" "-lz"
+    )
+    target_include_directories(JinGoCore PRIVATE
+        "${JINDO_INCLUDE_DIR}"
+    )
 
     add_custom_command(TARGET JinGo POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:JinGoCore>"
@@ -575,18 +582,16 @@ if(WIN32)
     target_include_directories(JinGo PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/windows
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/wintun/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/superray/windows/include
+        ${JINDO_INCLUDE_DIR}
     )
 elseif(TARGET_LINUX)
     target_include_directories(JinGo PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/linux
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/superray/linux/include
+        ${JINDO_INCLUDE_DIR}
     )
 endif()
 
-if(EXISTS ${SUPERRAY_INCLUDE_DIR})
-    target_include_directories(JinGo PRIVATE ${SUPERRAY_INCLUDE_DIR})
-endif()
+# SuperRay headers included via JinDoCore, no separate include needed
 
 if(TARGET_ANDROID)
     target_include_directories(JinGo PRIVATE ${Qt6Core_PRIVATE_INCLUDE_DIRS})
@@ -620,6 +625,11 @@ if(TARGET JinDoCore)
         ${JINDO_INCLUDE_DIR}/extensions/PacketTunnelProvider
     )
 
+    # Apple platforms: SuperRay (Go) needs resolv library for DNS
+    if(TARGET_MACOS OR TARGET_IOS)
+        target_link_libraries(JinGo PRIVATE "-lresolv" "-lz")
+    endif()
+
     if(TARGET_WINDOWS)
         set(WINPTHREAD_STATIC_LIB "D:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/lib/libwinpthread.a")
         if(EXISTS "${WINPTHREAD_STATIC_LIB}")
@@ -631,8 +641,12 @@ if(TARGET JinDoCore)
     endif()
 
     if(TARGET_LINUX)
+        # Add wrapper object to provide __res_search symbol for Go/CGO
+        set(RES_WRAPPER "${JINDO_LIB_DIR}/res_search_wrapper.o")
         target_link_libraries(JinGo PRIVATE
             Qt6::Sql Qt6::Gui Qt6::Widgets ${PLATFORM_LIBS}
+            "${RES_WRAPPER}"
+            "-lresolv" "-lz"
         )
     endif()
 endif()
@@ -685,57 +699,29 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 # SuperRay integration
-option(USE_SUPERRAY "Enable SuperRay support" ON)
-if(USE_SUPERRAY AND EXISTS ${SUPERRAY_INCLUDE_DIR})
-    target_include_directories(JinGo PRIVATE ${SUPERRAY_INCLUDE_DIR})
+# SuperRay is statically merged into JinDoCore on all platforms except Windows
+target_compile_definitions(JinGo PRIVATE HAVE_SUPERRAY)
 
-    if(TARGET_MACOS OR TARGET_IOS)
-        target_link_directories(JinGo PRIVATE "${SUPERRAY_LIBRARY_DIR}")
-        target_link_options(JinGo PRIVATE "-F${SUPERRAY_LIBRARY_DIR}")
-        target_link_libraries(JinGo PRIVATE "${SUPERRAY_LIB}" "-lz" "-lresolv")
-    elseif(TARGET_ANDROID)
-        if(TARGET superray_imported)
-            target_link_libraries(JinGo PRIVATE superray_imported)
-        elseif(SUPERRAY_LIB AND EXISTS "${SUPERRAY_LIB}")
-            get_filename_component(SUPERRAY_SO_DIR "${SUPERRAY_LIB}" DIRECTORY)
-            target_link_directories(JinGo PRIVATE "${SUPERRAY_SO_DIR}")
-            target_link_libraries(JinGo PRIVATE superray)
-        endif()
-    elseif(TARGET_WINDOWS)
-        set(SUPERRAY_WIN_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/superray/windows")
-        if(EXISTS "${SUPERRAY_WIN_DIR}/amd64/superray.dll")
-            target_link_directories(JinGo PRIVATE "${SUPERRAY_WIN_DIR}/amd64")
-            target_link_libraries(JinGo PRIVATE superray)
-        endif()
-    elseif(TARGET_LINUX)
-        set(SUPERRAY_LINUX_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/superray/linux")
-        if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
-            set(SUPERRAY_LINUX_LIB_DIR "${SUPERRAY_LINUX_DIR}/arm64")
-        else()
-            set(SUPERRAY_LINUX_LIB_DIR "${SUPERRAY_LINUX_DIR}/amd64")
-        endif()
-        if(EXISTS "${SUPERRAY_LINUX_LIB_DIR}/libsuperray.so")
-            target_link_directories(JinGo PRIVATE "${SUPERRAY_LINUX_LIB_DIR}")
-            target_link_libraries(JinGo PRIVATE superray)
-        endif()
+if(TARGET_WINDOWS)
+    # Windows: SuperRay is a DLL, shipped alongside JinDoCore
+    set(SUPERRAY_DLL_DIR "${JINDO_LIB_DIR}")
+    if(EXISTS "${SUPERRAY_DLL_DIR}/superray.dll")
+        target_link_directories(JinGo PRIVATE "${SUPERRAY_DLL_DIR}")
+        target_link_libraries(JinGo PRIVATE superray)
     endif()
+endif()
 
-    target_compile_definitions(JinGo PRIVATE HAVE_SUPERRAY)
-
-    # RPATH configuration
-    if(TARGET_LINUX)
-        set_target_properties(JinGo PROPERTIES
-            INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib"
-            BUILD_WITH_INSTALL_RPATH OFF
-        )
-    elseif(TARGET_MACOS)
-        set_target_properties(JinGo PROPERTIES
-            INSTALL_RPATH "@executable_path/../Frameworks"
-            BUILD_WITH_INSTALL_RPATH OFF
-        )
-    endif()
-else()
-    target_compile_definitions(JinGo PRIVATE NO_SUPERRAY)
+# RPATH configuration
+if(TARGET_LINUX)
+    set_target_properties(JinGo PROPERTIES
+        INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib"
+        BUILD_WITH_INSTALL_RPATH OFF
+    )
+elseif(TARGET_MACOS)
+    set_target_properties(JinGo PROPERTIES
+        INSTALL_RPATH "@executable_path/../Frameworks"
+        BUILD_WITH_INSTALL_RPATH OFF
+    )
 endif()
 
 # Windows: WinTun and deployment
@@ -743,10 +729,8 @@ if(WIN32)
     set(WINTUN_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/third_party/wintun")
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
         set(WINTUN_DLL "${WINTUN_ROOT}/bin/amd64/wintun.dll")
-        set(SUPERRAY_DLL "${CMAKE_CURRENT_SOURCE_DIR}/third_party/superray/windows/amd64/superray.dll")
     else()
         set(WINTUN_DLL "${WINTUN_ROOT}/bin/x86/wintun.dll")
-        set(SUPERRAY_DLL "${CMAKE_CURRENT_SOURCE_DIR}/third_party/superray/windows/x86/superray.dll")
     endif()
 
     if(EXISTS ${WINTUN_DLL})
@@ -756,6 +740,8 @@ if(WIN32)
         )
     endif()
 
+    # Copy SuperRay DLL (from JinDoCore output)
+    set(SUPERRAY_DLL "${JINDO_LIB_DIR}/superray.dll")
     if(EXISTS ${SUPERRAY_DLL})
         add_custom_command(TARGET JinGo POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SUPERRAY_DLL}" "$<TARGET_FILE_DIR:JinGo>/superray.dll"

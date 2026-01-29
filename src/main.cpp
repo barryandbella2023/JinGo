@@ -10,6 +10,8 @@
 #include <QTranslator>
 #include <QLocale>
 #include <QTimer>
+#include <QElapsedTimer>
+#include <QThread>
 #include <QSslSocket>
 #include <QMessageBox>
 
@@ -275,10 +277,34 @@ void cleanupApplication() {
           BackgroundDataUpdater::destroy();
 #endif
 
-          // 停止 VPN 连接
-          if (VPNManager::instance().isConnected()) {
+          // 停止 VPN 连接（等待断开完成）
+          if (VPNManager::instance().isConnected() || VPNManager::instance().isConnecting()) {
+                    LOG_INFO("Disconnecting VPN before shutdown...");
                     VPNManager::instance().disconnect();
+
+                    // 用 processEvents 循环等待断开（最多 5 秒），避免嵌套 QEventLoop 卡死
+                    QElapsedTimer elapsed;
+                    elapsed.start();
+                    while (elapsed.elapsed() < 5000 &&
+                           (VPNManager::instance().isConnected() || VPNManager::instance().isConnecting())) {
+                              QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+                              QThread::msleep(50);
+                    }
+                    LOG_INFO("VPN disconnect wait finished");
           }
+
+#if defined(Q_OS_MACOS)
+          // macOS: 确保 JinGoCore 执行 cleanup（清理残留路由和 DNS）
+          {
+                    QString corePath = QCoreApplication::applicationDirPath() + "/JinGoCore";
+                    if (QFile::exists(corePath)) {
+                              QProcess cleanupProcess;
+                              cleanupProcess.start(corePath, QStringList() << "cleanup");
+                              cleanupProcess.waitForFinished(5000);
+                              LOG_INFO(QString("JinGoCore cleanup exit code: %1").arg(cleanupProcess.exitCode()));
+                    }
+          }
+#endif
 
           // 关闭 VPNCore
           VPNCore::instance().stop();
@@ -850,11 +876,13 @@ int main(int argc, char *argv[])
         }
     });
 
+          // 应用退出时确保清理 VPN
+          QObject::connect(&app, &QApplication::aboutToQuit, []() {
+                    cleanupApplication();
+          });
+
           // 运行事件循环
           int result = app.exec();
-
-          // 清理资源
-          cleanupApplication();
 
 // 清理系统托盘（仅桌面平台）
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
